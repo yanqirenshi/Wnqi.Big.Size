@@ -6,7 +6,8 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on (#:shinrabanshou)
+  :depends-on (#:local-time
+               #:shinrabanshou)
   :components ((:module "src"
                 :components
                 ((:file "package")
