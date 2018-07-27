@@ -6,10 +6,11 @@
   :version "0.1.0"
   :author ""
   :license ""
-  :depends-on ()
+  :depends-on (#:shinrabanshou)
   :components ((:module "src"
                 :components
-                ((:file "wnqi-big-size"))))
+                ((:file "package")
+                 (:file "classes"))))
   :description ""
   :long-description
   #.(read-file-string
