@@ -7,12 +7,16 @@
                 #:find-vertex
                 #:tx-make-vertex
                 #:tx-make-edge)
-  (:export #:tx-make-project
+  (:export #:project
+           #:tx-make-project
            #:get-project)
-  (:export #:tx-make-wbs
+  (:export #:wbs
+           #:tx-make-wbs
            #:get-wbs)
-  (:export #:get-workpackage
+  (:export #:workpackage
+           #:get-workpackage
            #:tx-make-workpackage)
   (:export #:tx-add-child
-           #:get-child))
+           #:get-child
+           #:find-children))
 (in-package :wnqi-big-size)

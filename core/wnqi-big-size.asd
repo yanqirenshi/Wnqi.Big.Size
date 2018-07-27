@@ -12,13 +12,12 @@
                 :components
                 ((:file "package")
                  (:file "classes")
-                 (:fild "children")
+                 (:file "children")
                  ;; project
                  (:file "project")
                  (:file "project-term")
                  ;; wbs
                  (:file "wbs")
-                 (:file "wbs-wbs")
                  (:file "wbs-term")
                  ;; workpackage
                  (:file "workpackage"))))
