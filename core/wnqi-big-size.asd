@@ -10,7 +10,17 @@
   :components ((:module "src"
                 :components
                 ((:file "package")
-                 (:file "classes"))))
+                 (:file "classes")
+                 ;; project
+                 (:file "project")
+                 (:file "project-term")
+                 (:file "project-wbs")
+                 (:file "project-artifact")
+                 ;; wbs
+                 (:file "wbs")
+                 (:file "wbs-structure")
+                 (:file "wbs-artifact")
+                 (:file "wbs-term"))))
   :description ""
   :long-description
   #.(read-file-string
