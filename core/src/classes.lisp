@@ -37,4 +37,6 @@
 
 (defclass wbs (tree-node) ())
 
+(defclass workpackage (tree-node) ())
+
 (defclass artifact (tree-node) ())

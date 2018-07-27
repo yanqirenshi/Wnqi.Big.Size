@@ -12,16 +12,16 @@
                 :components
                 ((:file "package")
                  (:file "classes")
+                 (:fild "children")
                  ;; project
                  (:file "project")
                  (:file "project-term")
-                 (:file "project-wbs")
-                 (:file "project-artifact")
                  ;; wbs
                  (:file "wbs")
-                 (:file "wbs-structure")
-                 (:file "wbs-artifact")
-                 (:file "wbs-term"))))
+                 (:file "wbs-wbs")
+                 (:file "wbs-term")
+                 ;; workpackage
+                 (:file "workpackage"))))
   :description ""
   :long-description
   #.(read-file-string
