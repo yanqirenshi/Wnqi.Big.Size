@@ -1,2 +1,0 @@
-<home-database>
-</home-database>
