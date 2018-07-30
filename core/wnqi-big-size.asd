@@ -7,6 +7,7 @@
   :author ""
   :license ""
   :depends-on (#:local-time
+               #:jonathan
                #:shinrabanshou)
   :components ((:module "src"
                 :components
