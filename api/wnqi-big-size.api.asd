@@ -9,7 +9,10 @@
   :depends-on ()
   :components ((:module "src"
                 :components
-                ((:file "wnqi-big-size.api"))))
+                ((:file "package")
+                 (:file "controller")
+                 (:file "render")
+                 (:file "router"))))
   :description ""
   :long-description
   #.(read-file-string
