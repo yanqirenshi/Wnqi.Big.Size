@@ -21,14 +21,16 @@
 
 (defmethod jojo:%to-json ((obj edge))
   (jojo:with-object
-    (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
-    (jojo:write-key-value "start" (slot-value obj 'start))))
+    (jojo:write-key-value "_id"    (slot-value obj 'up:%id))
+    (jojo:write-key-value "start"  (slot-value obj 'start))
+    (jojo:write-key-value "_class" "EDGE")))
 
 (defmethod jojo:%to-json ((obj edge-past))
   (jojo:with-object
     (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
     (jojo:write-key-value "start" (slot-value obj 'start))
-    (jojo:write-key-value "end"   (slot-value obj 'end))))
+    (jojo:write-key-value "end"   (slot-value obj 'end))
+    (jojo:write-key-value "_class" "EDGE-PAST")))
 
 
 
@@ -39,11 +41,19 @@
 (defclass schedule (term) ())
 (defclass result (term) ())
 
-(defmethod jojo:%to-json ((obj term))
+(defmethod jojo:%to-json ((obj schedule))
   (jojo:with-object
-    (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
-    (jojo:write-key-value "start" (slot-value obj 'start))
-    (jojo:write-key-value "end"   (slot-value obj 'end))))
+    (jojo:write-key-value "_id"    (slot-value obj 'up:%id))
+    (jojo:write-key-value "start"  (slot-value obj 'start))
+    (jojo:write-key-value "end"    (slot-value obj 'end))
+    (jojo:write-key-value "_class" "SCHEDULE")))
+
+(defmethod jojo:%to-json ((obj result))
+  (jojo:with-object
+    (jojo:write-key-value "_id"    (slot-value obj 'up:%id))
+    (jojo:write-key-value "start"  (slot-value obj 'start))
+    (jojo:write-key-value "end"    (slot-value obj 'end))
+    (jojo:write-key-value "_class" "RESULT")))
 
 
 ;;;;;
@@ -67,22 +77,26 @@
     (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
     (jojo:write-key-value "code"        (slot-value obj 'code))
     (jojo:write-key-value "name"        (slot-value obj 'name))
-    (jojo:write-key-value "description" (slot-value obj 'description))))
+    (jojo:write-key-value "description" (slot-value obj 'description))
+    (jojo:write-key-value "_class"      "PROJECT")))
 
 (defmethod jojo:%to-json ((obj wbs))
   (jojo:with-object
     (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
     (jojo:write-key-value "name"        (slot-value obj 'name))
-    (jojo:write-key-value "description" (slot-value obj 'description))))
+    (jojo:write-key-value "description" (slot-value obj 'description))
+    (jojo:write-key-value "_class"      "WBS")))
 
 (defmethod jojo:%to-json ((obj workpackage))
   (jojo:with-object
     (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
     (jojo:write-key-value "name"        (slot-value obj 'name))
-    (jojo:write-key-value "description" (slot-value obj 'description))))
+    (jojo:write-key-value "description" (slot-value obj 'description))
+    (jojo:write-key-value "_class"      "WORKPACKAGE")))
 
 (defmethod jojo:%to-json ((obj artifact))
   (jojo:with-object
     (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
     (jojo:write-key-value "name"        (slot-value obj 'name))
-    (jojo:write-key-value "description" (slot-value obj 'description))))
+    (jojo:write-key-value "description" (slot-value obj 'description))
+    (jojo:write-key-value "_class"      "ARTIFACT")))
