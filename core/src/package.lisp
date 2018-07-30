@@ -18,5 +18,6 @@
            #:tx-make-workpackage)
   (:export #:tx-add-child
            #:get-child
-           #:find-children))
+           #:find-children)
+  (:export #:find-reaf))
 (in-package :wnqi-big-size)

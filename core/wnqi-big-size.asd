@@ -20,7 +20,9 @@
                  (:file "wbs")
                  (:file "wbs-term")
                  ;; workpackage
-                 (:file "workpackage"))))
+                 (:file "workpackage")
+                 ;; finder
+                 (:file "finder"))))
   :description ""
   :long-description
   #.(read-file-string
