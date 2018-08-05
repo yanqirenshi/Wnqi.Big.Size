@@ -1,0 +1,37 @@
+(in-package :wnqi-big-size)
+
+(defun %find-tree-schedule2plist (schedule)
+  (if (not schedule)
+      (list :start :null :end :null)
+      (list :start (local-time:format-timestring nil (start schedule))
+            :end   (local-time:format-timestring nil (end schedule)))))
+
+(defun %find-tree-schedule (graph child)
+  (let ((class (class-name (class-of child))))
+    (if (not (eq 'workpackage class))
+        (%find-tree-schedule2plist nil)
+        (%find-tree-schedule2plist (get-schedule graph child)))))
+
+(defun %find-tree (graph children)
+  (when-let ((child (car children)))
+    (let ((schedule (%find-tree-schedule graph child)))
+      (cons (list :|_id|  (up:%id child)
+                  :|code| (up:%id child)
+                  :|name| (name child)
+                  :|description| (or (description child) :null)
+                  :|start| (getf schedule :start)
+                  :|end|   (getf schedule :end)
+                  :|children| (%find-tree graph (find-children graph child))
+                  :|_class| (class-name (class-of child)))
+            (%find-tree graph (cdr children))))))
+
+(defun find-tree (graph &key project-code)
+  (let ((project (get-project graph :code project-code)))
+    (list :|_id|  (up:%id project)
+          :|code| (code project)
+          :|name| (name project)
+          :|description| (or (description project) :null)
+          :|start| :null
+          :|end|   :null
+          :|children| (%find-tree graph (find-children graph project))
+          :|_class| (class-name (class-of project)))))

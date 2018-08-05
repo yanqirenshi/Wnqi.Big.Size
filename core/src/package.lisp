@@ -1,6 +1,8 @@
 (defpackage wnqi-big-size
   (:nicknames :wbs)
   (:use #:cl)
+  (:import-from :alexandria
+                #:when-let)
   (:import-from :upanishad
                 #:%id)
   (:import-from :shinra
@@ -19,5 +21,6 @@
   (:export #:tx-add-child
            #:get-child
            #:find-children)
-  (:export #:find-reaf))
+  (:export #:find-reaf)
+  (:export #:find-tree))
 (in-package :wnqi-big-size)

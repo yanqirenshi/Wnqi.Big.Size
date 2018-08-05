@@ -23,7 +23,8 @@
                  ;; workpackage
                  (:file "workpackage")
                  ;; finder
-                 (:file "finder"))))
+                 (:file "finder")
+                 (:file "tree"))))
   :description ""
   :long-description
   #.(read-file-string

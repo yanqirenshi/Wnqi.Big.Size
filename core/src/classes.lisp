@@ -37,7 +37,10 @@
 ;;;;;
 ;;;;; Term
 ;;;;;
-(defclass term (node immutable) (start end))
+(defclass term (node immutable)
+  ((start :accessor start :initarg :start :initform nil)
+   (end :accessor end :initarg :end :initform nil)))
+
 (defclass schedule (term) ())
 (defclass result (term) ())
 
