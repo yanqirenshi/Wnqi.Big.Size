@@ -22,5 +22,7 @@
            #:get-child
            #:find-children)
   (:export #:find-reaf)
-  (:export #:find-tree))
+  (:export #:find-tree)
+  (:export #:tx-add-schedule
+           #:tx-add-result))
 (in-package :wnqi-big-size)
