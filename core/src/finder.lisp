@@ -1,6 +1,6 @@
 (in-package :wnqi-big-size)
 
-(defun get-child (graph parent child-name class)
+(defun get-child-at-name (graph parent child-name class)
   (when parent
     (find-if #'(lambda (d)
                  (string= child-name (name d)))
@@ -11,10 +11,10 @@
                                    :vertex-class class))))
 
 (defun get-child-wp-at-name (graph parent child-name)
-  (get-child graph parent child-name 'workpackage))
+  (get-child-at-name graph parent child-name 'workpackage))
 
 (defun get-child-wbs-at-name (graph parent child-name)
-  (get-child graph parent child-name 'wbs))
+  (get-child-at-name graph parent child-name 'wbs))
 
 
 ;;;;;
