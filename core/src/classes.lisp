@@ -1,6 +1,22 @@
 (in-package :wnqi-big-size)
 
 ;;;;;
+;;;;; Util
+;;;;;
+(defun timestamp2json (ts)
+  (if (not ts)
+      :null
+      (local-time:format-timestring nil ts
+                                    :format '((:YEAR 4) #\-
+                                              (:MONTH 2) #\-
+                                              (:DAY 2) #\T
+                                              (:HOUR 2) #\:
+                                              (:MIN 2) #\:
+                                              (:SEC 2) #\.
+                                              (:USEC 6) :gmt-offset-hhmm))))
+
+
+;;;;;
 ;;;;; Base
 ;;;;;
 (defclass immutable ()
@@ -33,7 +49,6 @@
     (jojo:write-key-value "_class" "EDGE-PAST")))
 
 
-
 ;;;;;
 ;;;;; Term
 ;;;;;
@@ -47,15 +62,15 @@
 (defmethod jojo:%to-json ((obj schedule))
   (jojo:with-object
     (jojo:write-key-value "_id"    (slot-value obj 'up:%id))
-    (jojo:write-key-value "start"  (slot-value obj 'start))
-    (jojo:write-key-value "end"    (slot-value obj 'end))
+    (jojo:write-key-value "start"  (timestamp2json (slot-value obj 'start)))
+    (jojo:write-key-value "end"    (timestamp2json (slot-value obj 'end)))
     (jojo:write-key-value "_class" "SCHEDULE")))
 
 (defmethod jojo:%to-json ((obj result))
   (jojo:with-object
     (jojo:write-key-value "_id"    (slot-value obj 'up:%id))
-    (jojo:write-key-value "start"  (slot-value obj 'start))
-    (jojo:write-key-value "end"    (slot-value obj 'end))
+    (jojo:write-key-value "start"  (timestamp2json (slot-value obj 'start)))
+    (jojo:write-key-value "end"    (timestamp2json (slot-value obj 'end)))
     (jojo:write-key-value "_class" "RESULT")))
 
 
