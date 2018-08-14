@@ -23,6 +23,8 @@
 
 (defgeneric tx-add-schedule (graph workpackage start end)
   (:method (graph (workpackage workpackage) (start local-time:timestamp) (end local-time:timestamp))
+    (%tx-add-schedule graph workpackage start end))
+  (:method (graph (workpackage workpackage) (start (eql nil)) (end (eql nil)))
     (%tx-add-schedule graph workpackage start end)))
 
 
@@ -48,5 +50,9 @@
                 :have-to))
 
 (defgeneric tx-add-result (graph workpackage start end)
+  (:method (graph (workpackage workpackage) (start (eql nil)) (end (eql nil)))
+    (%tx-add-result graph workpackage start end))
+  (:method (graph (workpackage workpackage) (start local-time:timestamp) (end (eql nil)))
+    (%tx-add-result graph workpackage start end))
   (:method (graph (workpackage workpackage) (start local-time:timestamp) (end local-time:timestamp))
     (%tx-add-result graph workpackage start end)))
