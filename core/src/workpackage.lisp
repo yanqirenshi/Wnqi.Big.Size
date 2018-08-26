@@ -12,4 +12,5 @@
 (defun tx-make-workpackage (graph name &key description)
   (let ((wp (%tx-make-workpackage graph name description)))
     (tx-add-schedule graph wp nil nil)
-    (tx-add-result graph wp nil nil)))
+    (tx-add-result graph wp nil nil)
+    wp))
