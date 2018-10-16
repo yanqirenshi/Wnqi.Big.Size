@@ -24,5 +24,11 @@
   (:export #:find-reaf)
   (:export #:find-tree)
   (:export #:tx-add-schedule
-           #:tx-add-result))
+           #:tx-add-result)
+  (:export #:get-project-owner
+           #:tx-make-project-owner)
+  (:export #:get-estimate
+           #:tx-make-estimate)
+  (:export #:get-resource
+           #:tx-make-resource))
 (in-package :wnqi-big-size)

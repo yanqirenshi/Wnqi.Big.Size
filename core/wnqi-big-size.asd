@@ -12,16 +12,31 @@
   :components ((:module "src"
                 :components
                 ((:file "package")
-                 (:file "classes")
+                 (:module "classes"
+                  :components ((:file "util")
+                               (:file "base")
+                               (:file "node")
+                               (:file "edge")
+                               (:file "term")
+                               (:file "project")
+                               (:file "wbs")
+                               (:file "workpackage")
+                               (:file "artifact")
+                               (:file "project-owner")
+                               (:file "resource")
+                               (:file "estimate")))
+                 (:module "nodes"
+                  :components ((:file "project")
+                               (:file "wbs")
+                               (:file "workpackage")
+                               (:file "estimate")
+                               (:file "resource")
+                               (:file "project-owner")))
                  (:file "children")
-                 ;; project
-                 (:file "project")
-                 (:file "project-term")
-                 ;; wbs
-                 (:file "wbs")
-                 (:file "wbs-term")
-                 ;; workpackage
-                 (:file "workpackage")
+                 (:file "wbs_term")
+                 (:file "owner_project")
+                 (:file "project_term")
+                 (:file "project_estimate")
                  ;; finder
                  (:file "finder")
                  (:file "tree"))))

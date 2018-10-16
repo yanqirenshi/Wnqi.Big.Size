@@ -3,9 +3,13 @@
 ## Model
 
 ```
+- project-owner
 - project
 - wbs
 - artifacts
+- resource
+
+- project-owner ---------> project
 
 - project ---edge, :have-to-[1:n]-------> wbs
 - wbs -------edge, :have-to-[1:n]-------> wbs
