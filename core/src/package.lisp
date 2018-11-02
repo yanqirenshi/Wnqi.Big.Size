@@ -25,10 +25,12 @@
   (:export #:find-tree)
   (:export #:tx-add-schedule
            #:tx-add-result)
-  (:export #:get-project-owner
+  (:export #:find-project-owners
+           #:get-project-owner
            #:tx-make-project-owner)
   (:export #:get-estimate
            #:tx-make-estimate)
-  (:export #:get-resource
+  (:export #:find-resource
+           #:get-resource
            #:tx-make-resource))
 (in-package :wnqi-big-size)
