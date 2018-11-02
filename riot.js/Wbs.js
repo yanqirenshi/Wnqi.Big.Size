@@ -113,6 +113,9 @@ class Wbs {
             if (!node.children || node.children.length==0)
                 continue;
 
+            if (node._class=="WBS" && options.hide.wbs.finished && node.result.end)
+                continue;
+
             let children = this.flatten(node.children, level + 1, options);
             out = out.concat(children);
         }
