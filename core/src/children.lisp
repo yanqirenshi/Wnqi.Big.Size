@@ -3,10 +3,11 @@
 (defun %find-children (graph parent vertex-classes)
   (reduce #'(lambda (a vertex-class)
               (nconc a
-                     (shinra:find-r-vertex graph 'edge
-                                           :from parent
-                                           :vertex-class vertex-class
-                                           :edge-type :have-to)))
+                     (remove nil
+                             (shinra:find-r-vertex graph 'edge
+                                                   :from parent
+                                                   :vertex-class vertex-class
+                                                   :edge-type :have-to))))
           vertex-classes
           :initial-value nil))
 
@@ -20,9 +21,10 @@
 (defun %get-child (graph parent child)
   (car (find-if #'(lambda (d) (= (%id child)
                                  (%id (getf d :vertex))))
-                (shinra:find-r graph 'edge :from parent
-                                           :vertex-class (class-name (class-of child))
-                                           :edge-type :have-to))))
+                (remove nil
+                        (shinra:find-r graph 'edge :from parent
+                                                   :vertex-class (class-name (class-of child))
+                                                   :edge-type :have-to)))))
 
 (defgeneric get-child (graph parent child)
   (:method (graph (parent project)     (child wbs))         (%get-child graph parent child))

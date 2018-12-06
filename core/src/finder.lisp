@@ -4,11 +4,12 @@
   (when parent
     (find-if #'(lambda (d)
                  (string= child-name (name d)))
-             (shinra:find-r-vertex graph
-                                   'edge
-                                   :from parent
-                                   :edge-type :have-to
-                                   :vertex-class class))))
+             (remove nil
+                     (shinra:find-r-vertex graph
+                                           'edge
+                                           :from parent
+                                           :edge-type :have-to
+                                           :vertex-class class)))))
 
 (defun get-child-wp-at-name (graph parent child-name)
   (get-child-at-name graph parent child-name 'workpackage))

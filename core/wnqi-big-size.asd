@@ -24,7 +24,8 @@
                                (:file "artifact")
                                (:file "project-owner")
                                (:file "resource")
-                               (:file "estimate")))
+                               (:file "estimate")
+                               (:file "product")))
                  (:module "nodes"
                   :components ((:file "project")
                                (:file "wbs")
