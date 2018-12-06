@@ -1,5 +1,8 @@
 (in-package :wnqi-big-size)
 
+;;;;;
+;;;;; find-tree-node2plist
+;;;;;
 (defun term2plist (term)
   (if (not term)
       (list :|start| :null :|end| :null)
@@ -19,40 +22,124 @@
               ((eq :result type)
                (term2plist (get-result graph child)))))))
 
-(defun %find-tree-result (graph child)
-  (let ((class (class-name (class-of child))))
-    (if (not (eq 'workpackage class))
-        (%find-tree-result2plist nil)
-        (%find-tree-result2plist (get-result graph child)))))
+(defun %find-tree-node2plist (source &key code children schedule result)
+  (list :|_id|         (up:%id source)
+        :|code|        (or code (up:%id source))
+        :|name|        (name source)
+        :|description| (or (description source) :null)
+        :|schedule|    (or schedule (list :|start| :null :|end| :null))
+        :|result|      (or result   (list :|start| :null :|end| :null))
+        :|children|    children
+        :|_class|      (class-name (class-of source))))
 
-(defun %find-tree (graph children)
+(defgeneric find-tree-node2plist (graph node &key children)
+  (:method (graph (source project) &key children)
+    (declare (ignore graph))
+    (%find-tree-node2plist source
+                           :code (code source)
+                           :children children))
+  (:method (graph (source wbs) &key children)
+    (declare (ignore graph))
+    (%find-tree-node2plist source :children children))
+  (:method (graph (source workpackage) &key children)
+    (declare (ignore children))
+    (%find-tree-node2plist source
+                           :schedule (find-tree-node-term graph source :schedule)
+                           :result   (find-tree-node-term graph source :result)))
+  (:method (graph (edge edge) &key children)
+    (declare (ignore graph children))
+    (list :|_id|        (up:%id edge)
+          :|from_class| (shinra::from-class edge)
+          :|to_id|      (shinra::to-id edge)
+          :|to_class|   (shinra::to-class edge)
+          :|edge_type|  (shinra::edge-type edge))))
+
+;;;;;
+;;;;; find-tree-output-tree
+;;;;;
+;; (defun %find-tree-result (graph child)
+;;   (let ((class (class-name (class-of child))))
+;;     (if (not (eq 'workpackage class))
+;;         (%find-tree-result2plist nil)
+;;         (%find-tree-result2plist (get-result graph child)))))
+
+(defun %find-tree-output-tree (graph children)
   (when-let ((child (car children)))
+    ;; TODO: find-tree-node2plist を使うようにする。
     (cons (list :|_id|         (up:%id child)
                 :|code|        (up:%id child)
                 :|name|        (name child)
                 :|description| (or (description child) :null)
                 :|schedule|    (find-tree-node-term graph child :schedule)
                 :|result|      (find-tree-node-term graph child :result)
-                :|children|    (%find-tree graph (find-children graph child))
+                :|children|    (%find-tree-output-tree graph (find-children graph child))
                 :|_class|      (class-name (class-of child)))
-          (%find-tree graph (cdr children)))))
+          (%find-tree-output-tree graph (cdr children)))))
 
-(defgeneric find-tree (graph project)
+(defgeneric find-tree-output-tree (graph project)
   (:method (graph (source project))
+    ;; TODO: find-tree-node2plist を使うようにする。
     (list :|_id|         (up:%id source)
           :|code|        (code source)
           :|name|        (name source)
           :|description| (or (description source) :null)
           :|schedule|    (list :|start| :null :|end| :null)
           :|result|      (list :|start| :null :|end| :null)
-          :|children|    (%find-tree graph (find-children graph source))
+          :|children|    (%find-tree-output-tree graph (find-children graph source))
           :|_class|      (class-name (class-of source))))
   (:method (graph (source wbs))
+    ;; TODO: find-tree-node2plist を使うようにする。
     (list :|_id|         (up:%id source)
           :|code|        (up:%id source)
           :|name|        (name source)
           :|description| (or (description source) :null)
           :|schedule|    (list :|start| :null :|end| :null)
           :|result|      (list :|start| :null :|end| :null)
-          :|children|    (%find-tree graph (find-children graph source))
+          :|children|    (%find-tree-output-tree graph (find-children graph source))
           :|_class|      (class-name (class-of source)))))
+
+;;;;;
+;;;;; find-tree-output-plist
+;;;;;
+(defun %find-tree-node-children (graph parent-node child-class)
+  (shinra:find-r graph 'edge
+                 :from parent-node
+                 :vertex-class child-class
+                 :edge-type :have-to))
+
+(defgeneric find-tree-node-children (graph parent-node)
+  (:method (graph (parent-node project))
+    (nconc (%find-tree-node-children graph parent-node 'wbs)
+           (%find-tree-node-children graph parent-node 'workpackage)))
+  (:method (graph (parent-node wbs))
+    (nconc (%find-tree-node-children graph parent-node 'wbs)
+           (%find-tree-node-children graph parent-node 'workpackage)))
+  (:method (graph (parent-node workpackage))
+    nil))
+
+(defun find-tree-add-result (graph result data data-class)
+  (let ((plist (find-tree-node2plist graph data)))
+    (if (null (gethash data-class result))
+        (setf (gethash data-class result) (list plist))
+        (setf (gethash data-class result) (cons plist (gethash data-class result))))))
+
+(defun find-tree-output-plist (graph project &optional (result (make-hash-table)))
+  (let ((children (find-tree-node-children graph project)))
+    (dolist (child-r children)
+      (let* ((child (getf child-r :vertex))
+             (r     (getf child-r :edge))
+             (child-class (class-name (class-of child))))
+        (when child
+          (find-tree-add-result graph result child child-class)
+          (find-tree-add-result graph result r     'edge)
+          (find-tree-output-plist graph child result)))))
+  result)
+
+
+;;;;;
+;;;;; find-tree
+;;;;;
+(defun find-tree (graph start-node &key (output :tree))
+  (cond ((eq output :plist) (find-tree-output-plist graph start-node))
+        ((eq output :tree)  (find-tree-output-tree graph start-node))
+        (t nil)))
