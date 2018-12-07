@@ -143,10 +143,18 @@ class Wbs {
     /* **************************************************************** *
         New
      * **************************************************************** */
+    treeNodeLabel (core) {
+        if (core.name)
+            return core.name;
+        return '???';
+    }
     makeTreeNode (core) {
         return {
+            label: this.treeNodeLabel(core),
             core: core,
             children: { ht:{}, list: [] },
+            _id: core._id,
+            _class: core._class,
         };
     };
     getEdgeChildNodePoolKey (_class) {
@@ -208,7 +216,8 @@ class Wbs {
             let child_result = child.core.result;
             result.start = this.mergeResult('start', result, child_result);
             result.end   = this.mergeResult('end',   result, child_result);
-            if (!child_schedule.end)
+
+            if (!child_result.end)
                 result_null_exist = true;
         }
 
@@ -229,7 +238,7 @@ class Wbs {
                 this.addChildren(child_node, pool);
 
                 children.list.push(child_node);
-                children.ht[child_node._id] = child;
+                children.ht[child_node.core._id] = child_node;
             }
 
         if (parent._class!='WORKPACKAGE') {
@@ -240,6 +249,9 @@ class Wbs {
 
             parent_node.schedule = terms.schedule;
             parent_node.result   = terms.result;
+        } else {
+            parent_node.schedule = parent.schedule;
+            parent_node.result   = parent.result;
         }
 
         return parent_node;
