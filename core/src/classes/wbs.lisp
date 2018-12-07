@@ -1,5 +1,8 @@
 (in-package :wnqi-big-size)
 
+;;;;;
+;;;;; wbs
+;;;;;
 (defclass wbs (tree-node) ())
 
 (defmethod jojo:%to-json ((obj wbs))
@@ -10,37 +13,18 @@
     (jojo:write-key-value "_class"      "WBS")))
 
 
-(defclass workpackage (tree-node) ())
+;;;;;
+;;;;; wbs-tree-node
+;;;;;
+(defclass wbs-tree-node (wbs)
+  ((schedule :accessor schedule :initarg :schedule :initform nil)
+   (result   :accessor result   :initarg :result   :initform nil)))
 
-(defmethod jojo:%to-json ((obj workpackage))
+(defmethod jojo:%to-json ((obj wbs-tree-node))
   (jojo:with-object
-    (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
+    (jojo:write-key-value "_id"         (slot-value obj 'up:%id))
     (jojo:write-key-value "name"        (slot-value obj 'name))
     (jojo:write-key-value "description" (or (slot-value obj 'description) ""))
-    (jojo:write-key-value "_class"      "WORKPACKAGE")))
-
-
-(defclass artifact (tree-node) ())
-
-(defmethod jojo:%to-json ((obj artifact))
-  (jojo:with-object
-    (jojo:write-key-value "_id"   (slot-value obj 'up:%id))
-    (jojo:write-key-value "name"        (slot-value obj 'name))
-    (jojo:write-key-value "description" (or (slot-value obj 'description) ""))
-    (jojo:write-key-value "_class"      "ARTIFACT")))
-
-
-;;;;;
-;;;;; Others
-;;;;;
-(defclass project-owner (node mutable)
-  ((code :accessor code :initarg :code :initform nil)
-   (name :accessor name :initarg :name :initform nil)))
-
-(defclass resource (node mutable)
-  ((code :accessor code :initarg :code :initform nil)
-   (name :accessor name :initarg :name :initform nil)))
-
-(defclass estimate (node mutable)
-  ((amount :accessor amount :initarg :amount :initform nil)
-   (unit   :accessor unit   :initarg :unit   :initform nil)))
+    (jojo:write-key-value "schedule"    (or (slot-value obj 'schedule) :null))
+    (jojo:write-key-value "result"      (or (slot-value obj 'result)   :null))
+    (jojo:write-key-value "_class"      "WBS")))

@@ -101,6 +101,29 @@
 ;;;;;
 ;;;;; find-tree-output-plist
 ;;;;;
+(defmacro with-tree-node ((node tree-node-class) &body body)
+  `(let ((tree-node (make-instance ,tree-node-class)))
+     (setf (slot-value tree-node 'up:%id) (up:%id ,node))
+     (setf (name tree-node)               (name ,node))
+     (setf (description tree-node)        (description ,node))
+     ,@body
+     tree-node))
+
+(defgeneric node2tree-node (graph node)
+  (:method (graph (node workpackage))
+    (with-tree-node (node 'workpackage-tree-node)
+      (setf (schedule tree-node)           (get-schedule graph node))
+      (setf (result tree-node)             (get-result graph node))))
+  (:method (graph (node wbs))
+    (declare (ignore graph))
+    (with-tree-node (node 'wbs-tree-node)))
+  (:method (graph (node project))
+    (declare (ignore graph))
+    (with-tree-node (node 'project-tree-node)))
+  (:method (graph (node edge))
+    (declare (ignore graph))
+    node))
+
 (defun %find-tree-node-children (graph parent-node child-class)
   (shinra:find-r graph 'edge
                  :from parent-node
@@ -118,12 +141,12 @@
     nil))
 
 (defun find-tree-add-result (graph result data data-class)
-  (let ((plist (find-tree-node2plist graph data)))
+  (let ((tree-node (node2tree-node graph data)))
     (if (null (gethash data-class result))
-        (setf (gethash data-class result) (list plist))
-        (setf (gethash data-class result) (cons plist (gethash data-class result))))))
+        (setf (gethash data-class result) (list tree-node))
+        (setf (gethash data-class result) (cons tree-node (gethash data-class result))))))
 
-(defun find-tree-output-plist (graph project &optional (result (make-hash-table)))
+(defun %find-tree-output-plist (graph project &optional (result (make-hash-table)))
   (let ((children (find-tree-node-children graph project)))
     (dolist (child-r children)
       (let* ((child (getf child-r :vertex))
@@ -132,14 +155,19 @@
         (when child
           (find-tree-add-result graph result child child-class)
           (find-tree-add-result graph result r     'edge)
-          (find-tree-output-plist graph child result)))))
+          (%find-tree-output-plist graph child result)))))
   result)
 
+(defun find-tree-output-plist (graph project)
+  (let ((result (make-hash-table))
+        (obj-class (class-name (class-of project))))
+    (find-tree-add-result graph result project obj-class)
+    (%find-tree-output-plist graph project result)))
 
 ;;;;;
 ;;;;; find-tree
 ;;;;;
-(defun find-tree (graph start-node &key (output :tree))
+(defun find-tree (graph start-node &key (output :plist))
   (cond ((eq output :plist) (find-tree-output-plist graph start-node))
         ((eq output :tree)  (find-tree-output-tree graph start-node))
         (t nil)))
