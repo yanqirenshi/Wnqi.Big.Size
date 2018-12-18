@@ -1,4 +1,9 @@
 class Wbs {
+    ensuserArray (obj) {
+        if (obj.isArray()) return obj;
+
+        return [obj];
+    }
     /* **************************************************************** *
         Action
      * **************************************************************** */
@@ -75,10 +80,10 @@ class Wbs {
         return {
             hide: {
                 wbs: {
-                    finished: true
+                    finished: false
                 },
                 workpackage: {
-                    finished: true
+                    finished: false
                 }
             }
         };
@@ -124,13 +129,29 @@ class Wbs {
         if (!date)
             return '---';
 
-        return moment(date).format('YYYY-MM-DD (ddd)');
+        return moment(date).format('YYYY-MM-DD');
+    }
+    date2week (date) {
+        if (!date)
+            return '---';
+
+        switch (moment(date).day()) {
+        case 0: return '日';
+        case 1: return '月';
+        case 2: return '火';
+        case 3: return '水';
+        case 4: return '木';
+        case 5: return '金';
+        case 6: return '土';
+        }
+
+        return '---';
     }
     margin (level) {
         let out = "";
 
         for (let i=0; i<level ;i++)
-            out += "　";
+            out += "　　";
 
         return out;
     }
@@ -141,7 +162,7 @@ class Wbs {
         return location.hash.split('/')[0] + '/' + cls.toLowerCase() + '/' +code;
     };
     /* **************************************************************** *
-        New
+        ComposeTree
      * **************************************************************** */
     treeNodeLabel (core) {
         if (core.name)
@@ -268,10 +289,72 @@ class Wbs {
 
         return this.addChildren(project_node, pool);
     }
-    composeTreeFlat (project, wbs, workpackages, edges) {
+    composeTreeFlat (project, wbs, workpackages, edges, options) {
         let tree = this.composeTree(project, wbs, workpackages, edges);
-        let flat_tree = this.flatten([tree], 0);
+        let flat_tree = this.flatten([tree], 0, options);
 
         return flat_tree;
+    }
+    /* **************************************************************** *
+        find min start and max end
+     * **************************************************************** */
+    getSmallDate(a, b) {
+        if (!a) return b;
+        if (!b) return a;
+
+        if (a.isBefore(b))
+            return a;
+
+        return b;
+    };
+    getLargeDate(a, b) {
+        if (!a) return b;
+        if (!b) return a;
+
+        if (a.isBefore(b))
+            return b;
+
+        return a;
+    };
+    getSmallDateAtNode (node, type) {
+        let schedule = node.schedule[type];
+        let result = node.result[type];
+
+        return this.getSmallDate(schedule, result);
+    }
+    getLargeDateAtNode (node, type) {
+        let schedule = node.schedule[type];
+        let result = node.result[type];
+
+        return this.getLargeDate(schedule, result);
+    }
+    findStartEndNode (node) {
+        let children = node.children.list;
+
+        if (children.length==0)
+            return {
+                start: this.getLargeDateAtNode (node, 'start'),
+                end: this.getLargeDateAtNode (node, 'end'),
+            };
+
+        return this.findStartEndChildren(children);
+    }
+    findStartEndChildren (children) {
+        let out = { start: null, end: null };
+
+        for (let child of children) {
+            let term = this.findStartEndNode (child);
+
+            out.start = this.getSmallDate(out.start, term.start);
+            out.end   = this.getLargeDate(out.end, term.end);
+        }
+
+        return out;
+    }
+    findStartEnd (target) {
+        if (target.isArray && target.isArray())
+            return this.findStartEndChildren(target);
+        else
+            return this.findStartEndNode(target);
     }
 }

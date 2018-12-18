@@ -1,4 +1,4 @@
-<wbs-guntt-chat>
+<wbs-guntt-chart>
     <div style="overflow:auto;">
         <svg class="chart-yabane"></svg>
     </div>
@@ -8,7 +8,7 @@
          let tree = this.opts.data ? this.opts.data : [];
          let selector = 'svg.chart-yabane';
 
-         let d3yabane = new D3jsYabane()
+         let d3yabane = new D3jsYabane({ callback: this.opts.callback })
              .config(selector, this.opts.start, this.opts.end)
              .setScale()
              .makeStage()
@@ -16,4 +16,4 @@
              .draw();
      });
     </script>
-</wbs-guntt-chat>
+</wbs-guntt-chart>
