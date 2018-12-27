@@ -26,6 +26,22 @@
                                                    :vertex-class (class-name (class-of child))
                                                    :edge-type :have-to)))))
 
+(defun %get-child-r-rm-dust (d)
+  ;; TODO: こんなデータが出来たらダメなんじゃけど。。。
+  (or (null d)
+      (null (getf d :vertex))))
+
+(defun %get-child-r (graph parent child)
+  (remove-if #'%get-child-r-rm-dust
+             (shinra:find-r graph 'edge :from parent
+                                        :vertex-class (class-name (class-of child))
+                                        :edge-type :have-to)))
+
+(defun %get-child (graph parent child)
+  (car (find-if #'(lambda (d) (= (%id child)
+                                 (%id (getf d :vertex))))
+                (%get-child-r graph parent child))))
+
 (defgeneric get-child (graph parent child)
   (:method (graph (parent project)     (child wbs))         (%get-child graph parent child))
   (:method (graph (parent wbs)         (child wbs))         (%get-child graph parent child))

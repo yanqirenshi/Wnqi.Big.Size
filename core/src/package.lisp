@@ -24,7 +24,9 @@
   (:export #:find-reaf)
   (:export #:find-tree)
   (:export #:tx-add-schedule
-           #:tx-add-result)
+           #:tx-add-result
+           #:get-schedule
+           #:get-result)
   (:export #:find-project-owners
            #:get-project-owner
            #:tx-make-project-owner)
