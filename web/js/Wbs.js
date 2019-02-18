@@ -177,7 +177,7 @@ class Wbs {
             _id: core._id,
             _class: core._class,
         };
-    };
+    }
     getEdgeChildNodePoolKey (_class) {
         switch (_class) {
         case 'PROJECT':     return 'projects';

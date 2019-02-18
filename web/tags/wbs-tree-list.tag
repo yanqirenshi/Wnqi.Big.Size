@@ -66,6 +66,10 @@
 
     <script>
      this.hideOperators = () => {
+         if (!this.opts.options ||
+             !this.opts.options.security)
+             return '';
+
          let v = (this.opts.options.security.create || this.opts.options.security.delete);
 
          return v ? '' : 'hide';

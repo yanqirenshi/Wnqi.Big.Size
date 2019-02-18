@@ -1,0 +1,1 @@
+/Users/satoshi.iwasaki/prj/fg/wnqi-big-size/web/js/Wbs.js
