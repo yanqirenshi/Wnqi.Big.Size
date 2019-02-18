@@ -15,7 +15,7 @@ class Store extends Vanilla_Redux_Store {
                 }
             },
             {
-                code: "example", menu_label: '試',
+                code: "example", menu_label: 'T:階',
                 active_section: 'root', home_section: 'root',
                 children: [{ code: 'root', tag: 'example_page_root' }],
                 stye: {
@@ -23,7 +23,7 @@ class Store extends Vanilla_Redux_Store {
                 }
             },
             {
-                code: "models", menu_label: '型',
+                code: "models", menu_label: 'T:型',
                 active_section: 'root', home_section: 'root',
                 children: [{ code: 'root', tag: 'models_page_root' }],
                 stye: {

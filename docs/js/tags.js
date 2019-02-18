@@ -352,7 +352,7 @@ riot.tag2('home', '', '', '', function(opts) {
      this.on('update', () => { this.draw(); });
 });
 
-riot.tag2('home_page_root', '<section-header title="HOME"></section-header>', '', '', function(opts) {
+riot.tag2('home_page_root', '<div class="hero-body"> <div class="container"> <h1 class="title">Wnqi Big Size</h1> <h2 class="subtitle">WBS ってデッカイう○ちみたいじゃね。</h2> <section class="section"> <div class="container"> <h1 class="title">概要</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>WBSを描画するためのライブラリです。</p> <p>以下のもので出来ています。</p> <ol> <li>D3.js</li> <li>Riot.js</li> <li>Vanilla.js</li> </ol> <p>描画出来るのは以下のものです。</p> <ol> <li>WBS のテーブル</li> <li>Guntt Chart</li> </ol> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title">やっていること</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>project, wbs, workpackage, edge のデータを元に、描画するための階層構造データを作成します。</p> <p>その階層構造データを元に描画処理を行います。</p> <p>「<a href="/wbs/docs/#example">T:階</a>」のページでどのような階層が出力されるのかを確認することが出来ます。</p> <p>「<a href="/wbs/docs/#models">T:型</a>」のページで各データがどのように階層構造データのノードに変換されるかを確認することが出来ます。</p> </div> </div> </section> </div> </div>', 'home_page_root .contents ol { margin-left:33px; }', '', function(opts) {
 });
 
 riot.tag2('models', '', '', '', function(opts) {
@@ -409,46 +409,4 @@ riot.tag2('models_page_tab_workpackage', '<section class="section"> <div class="
      this.model = () => {
          return STORE.get('models.workpackage');
      };
-});
-
-riot.tag2('page02', '', '', '', function(opts) {
-     this.mixin(MIXINS.page);
-
-     this.on('mount', () => { this.draw(); });
-     this.on('update', () => { this.draw(); });
-});
-
-riot.tag2('page02_page_root', '<section-header title="Page02"></section-header> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <page02_page_tab_readme class="hide"></page02_page_tab_readme> <page02_page_tab_tab1 class="hide"></page02_page_tab_tab1> <page02_page_tab_tab2 class="hide"></page02_page_tab_tab2> <page02_page_tab_tab3 class="hide"></page02_page_tab_tab3> <page02_page_tab_help class="hide"></page02_page_tab_help> </div> <section-footer></section-footer>', '', '', function(opts) {
-     this.page_tabs = new PageTabs([
-         {code: 'readme', label: 'README', tag: 'page02_page_tab_readme' },
-         {code: 'tab1',   label: 'TAB1',   tag: 'page02_page_tab_tab1' },
-         {code: 'tab2',   label: 'TAB2',   tag: 'page02_page_tab_tab2' },
-         {code: 'tab3',   label: 'TAB3',   tag: 'page02_page_tab_tab3' },
-         {code: 'help',   label: 'HELP',   tag: 'page02_page_tab_help' },
-     ]);
-
-     this.on('mount', () => {
-         this.page_tabs.switchTab(this.tags)
-         this.update();
-     });
-
-     this.clickTab = (e, action, data) => {
-         if (this.page_tabs.switchTab(this.tags, data.code))
-             this.update();
-     };
-});
-
-riot.tag2('page02_page_tab_help', '<section class="section"> <div class="container"> <h1 class="title">HELP</h1> <h2 class="subtitle"> </h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-});
-
-riot.tag2('page02_page_tab_readme', '<section class="section"> <div class="container"> <h1 class="title">README</h1> <h2 class="subtitle"> </h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-});
-
-riot.tag2('page02_page_tab_tab1', '<section class="section"> <div class="container"> <h1 class="title">TAB1</h1> <h2 class="subtitle"> </h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-});
-
-riot.tag2('page02_page_tab_tab2', '<section class="section"> <div class="container"> <h1 class="title">TAB2</h1> <h2 class="subtitle"> </h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-});
-
-riot.tag2('page02_page_tab_tab3', '<section class="section"> <div class="container"> <h1 class="title">TAB3</h1> <h2 class="subtitle"> </h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
 });
