@@ -1,16 +1,8 @@
-<example_page_tab_tab1>
+<example_page_tab_list>
     <section class="section">
         <div class="container">
             <div class="contents">
                 <wbs-tree-list></wbs-tree-list>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="container">
-            <h1 class="title is-4">Data</h1>
-            <div class="contents">
             </div>
         </div>
     </section>
@@ -38,4 +30,4 @@
              options);
      };
     </script>
-</example_page_tab_tab1>
+</example_page_tab_list>

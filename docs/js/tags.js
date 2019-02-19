@@ -261,11 +261,11 @@ riot.tag2('example', '', '', '', function(opts) {
      this.on('update', () => { this.draw(); });
 });
 
-riot.tag2('example_page_root', '<section-header title="Example"></section-header> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example_page_tab_readme class="hide"></example_page_tab_readme> <example_page_tab_tab1 class="hide"></example_page_tab_tab1> <example_page_tab_tab2 class="hide"></example_page_tab_tab2> </div> <section-footer></section-footer>', '', '', function(opts) {
+riot.tag2('example_page_root', '<section-header title="Example"></section-header> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example_page_tab_readme class="hide"></example_page_tab_readme> <example_page_tab_list class="hide"></example_page_tab_list> <example_page_tab_guntt class="hide"></example_page_tab_guntt> </div> <section-footer></section-footer>', '', '', function(opts) {
      this.page_tabs = new PageTabs([
          {code: 'readme',   label: 'Data',               tag: 'example_page_tab_readme' },
-         {code: 'tab1',     label: 'WBS Table',          tag: 'example_page_tab_tab1' },
-         {code: 'tab2',     label: 'Guntt Chart',        tag: 'example_page_tab_tab2' },
+         {code: 'tab1',     label: 'WBS Table',          tag: 'example_page_tab_list' },
+         {code: 'tab2',     label: 'Guntt Chart',        tag: 'example_page_tab_guntt' },
      ]);
 
      this.on('mount', () => {
@@ -276,6 +276,64 @@ riot.tag2('example_page_root', '<section-header title="Example"></section-header
      this.clickTab = (e, action, data) => {
          if (this.page_tabs.switchTab(this.tags, data.code))
              this.update();
+     };
+});
+
+riot.tag2('example_page_tab_guntt', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section>', '', '', function(opts) {
+     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
+
+     this.options = {
+         scale: {
+             x: {
+                 cycle: 'days',
+                 tick: 88,
+                 start: moment(now).add(-3, 'd'),
+                 end:   moment(now).add( 3, 'w'),
+             }
+         },
+     };
+
+     this.data = () => {
+         let state = STORE.get('example');
+         let options = {}
+
+         if (state.projects.list.length==0)
+             return [];
+
+         let wbs = new Wbs();
+         let x = state.projects.list.map((project) => {
+             return wbs.composeTree(
+                 project,
+                 state.wbs,
+                 state.workpackages,
+                 state.edges)
+         });
+
+         return x;
+     };
+});
+
+riot.tag2('example_page_tab_list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list></wbs-tree-list> </div> </div> </section>', '', '', function(opts) {
+     this.data = () => {
+         let state = {
+             projects:     { ht: {}, list: [] },
+             wbs:          { ht: {}, list: [] },
+             workpackages: { ht: {}, list: [] },
+             edges:        { ht: {}, list: [] },
+         }
+         let options = {
+         }
+
+         if (state.projects.list.length==0)
+             return [];
+
+         let wbs = new Wbs()
+         return wbs.composeTreeFlat(
+             state.projects.list[0],
+             state.wbs,
+             state.workpackages,
+             state.edges,
+             options);
      };
 });
 
@@ -310,62 +368,19 @@ riot.tag2('example_page_tab_readme', '<section class="section"> <div class="cont
      };
 });
 
-riot.tag2('example_page_tab_tab1', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list></wbs-tree-list> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-4">Data</h1> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-     this.data = () => {
-         let state = {
-             projects:     { ht: {}, list: [] },
-             wbs:          { ht: {}, list: [] },
-             workpackages: { ht: {}, list: [] },
-             edges:        { ht: {}, list: [] },
-         }
-         let options = {
-         }
-
-         if (state.projects.list.length==0)
-             return [];
-
-         let wbs = new Wbs()
-         return wbs.composeTreeFlat(
-             state.projects.list[0],
-             state.wbs,
-             state.workpackages,
-             state.edges,
-             options);
-     };
+riot.tag2('a-d3js', '<a-target-blank href="https://d3js.org/" label="D3.js"> </a-target-blank>', '', '', function(opts) {
 });
 
-riot.tag2('example_page_tab_tab2', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-6">Data</h1> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
-     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
+riot.tag2('a-d3yabane', '<a-target-blank href="https://github.com/yanqirenshi/D3.Yabane" label="D3.Yabne"> </a-target-blank>', '', '', function(opts) {
+});
 
-     this.options = {
-         scale: {
-             x: {
-                 cycle: 'days',
-                 tick: 88,
-                 start: moment(now).add(-3, 'd'),
-                 end:   moment(now).add( 3, 'w'),
-             }
-         },
-     };
+riot.tag2('a-riotjs', '<a-target-blank href="https://riot.js.org/ja/" label="Riot.js"> </a-target-blank>', '', '', function(opts) {
+});
 
-     this.data = () => {
-         let state = STORE.get('example');
-         let options = {}
+riot.tag2('a-target-blank', '<a href="{opts.href}" target="_blank" rel="noopener noreferrer">{opts.label}</a>', '', '', function(opts) {
+});
 
-         if (state.projects.list.length==0)
-             return [];
-
-         let wbs = new Wbs();
-         let x = state.projects.list.map((project) => {
-             return wbs.composeTree(
-                 project,
-                 state.wbs,
-                 state.workpackages,
-                 state.edges)
-         });
-
-         return x;
-     };
+riot.tag2('a-vanillajs', '<a-target-blank href="http://vanilla-js.com/" label="Vanilla.js"> </a-target-blank>', '', '', function(opts) {
 });
 
 riot.tag2('home', '', '', '', function(opts) {
@@ -375,7 +390,7 @@ riot.tag2('home', '', '', '', function(opts) {
      this.on('update', () => { this.draw(); });
 });
 
-riot.tag2('home_page_root', '<div class="hero-body"> <div class="container"> <h1 class="title">Wnqi Big Size</h1> <h2 class="subtitle">WBS ってデッカイう○ちみたいじゃね。</h2> <section class="section"> <div class="container"> <h1 class="title">概要</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>WBSを描画するためのライブラリです。</p> <p>以下のもので出来ています。</p> <ol> <li>D3.js</li> <li>Riot.js</li> <li>Vanilla.js</li> </ol> <p>描画出来るのは以下のものです。</p> <ol> <li>WBS のテーブル</li> <li>Guntt Chart</li> </ol> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title">やっていること</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>project, wbs, workpackage, edge のデータを元に、描画するための階層構造データを作成します。</p> <p>その階層構造データを元に描画処理を行います。</p> <p>「<a href="/wbs/docs/#example">T:階</a>」のページでどのような階層が出力されるのかを確認することが出来ます。</p> <p>「<a href="/wbs/docs/#models">T:型</a>」のページで各データがどのように階層構造データのノードに変換されるかを確認することが出来ます。</p> </div> </div> </section> </div> </div>', 'home_page_root .contents ol { margin-left:33px; }', '', function(opts) {
+riot.tag2('home_page_root', '<div class="hero-body"> <div class="container"> <h1 class="title">Wnqi Big Size</h1> <h2 class="subtitle">WBS ってデッカイう○ちみたいじゃね。</h2> <section class="section"> <div class="container"> <h1 class="title">概要</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>WBSを描画するためのライブラリです。</p> <p>以下のもので出来ています。</p> <ol> <li><a-d3yabane></a-d3yabane> / <a-d3js></a-d3js></li> <li><a-riotjs></a-riotjs></li> <li><a-vanillajs></a-vanillajs></li> </ol> <p>描画出来るのは以下のものです。</p> <ol> <li>WBS のテーブル</li> <li>Guntt Chart</li> </ol> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title">やっていること</h1> <h2 class="subtitle"></h2> <div class="contents"> <p>project, wbs, workpackage, edge のデータを元に、描画するための階層構造データを作成します。</p> <p>その階層構造データを元に描画処理を行います。</p> <p>「<a href="/wbs/docs/#example">T:階</a>」のページでどのような階層が出力されるのかを確認することが出来ます。</p> <p>「<a href="/wbs/docs/#models">T:型</a>」のページで各データがどのように階層構造データのノードに変換されるかを確認することが出来ます。</p> </div> </div> </section> </div> </div>', 'home_page_root .contents ol { margin-left:33px; }', '', function(opts) {
 });
 
 riot.tag2('models', '', '', '', function(opts) {

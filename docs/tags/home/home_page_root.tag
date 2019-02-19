@@ -13,9 +13,9 @@
                         <p>WBSを描画するためのライブラリです。</p>
                         <p>以下のもので出来ています。</p>
                         <ol>
-                            <li>D3.js</li>
-                            <li>Riot.js</li>
-                            <li>Vanilla.js</li>
+                            <li><a-d3yabane></a-d3yabane> / <a-d3js></a-d3js></li>
+                                <li><a-riotjs></a-riotjs></li>
+                                <li><a-vanillajs></a-vanillajs></li>
                         </ol>
                         <p>描画出来るのは以下のものです。</p>
                         <ol>

@@ -1,4 +1,4 @@
-<example_page_tab_tab2>
+<example_page_tab_guntt>
     <section class="section">
         <div class="container">
             <div class="contents">
@@ -6,14 +6,6 @@
                                  start={start}
                                  end={end}
                                  options={options}></wbs-guntt-chart>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="container">
-            <h1 class="title is-6">Data</h1>
-            <div class="contents">
             </div>
         </div>
     </section>
@@ -51,4 +43,4 @@
          return x;
      };
     </script>
-</example_page_tab_tab2>
+</example_page_tab_guntt>
