@@ -4,14 +4,28 @@
             <textarea class="textarea">{source()}</textarea>
         </div>
         <div>
-            <button class="button">変換</button>
+            <button class="button" onclick={clickConvertButton}>変換</button>
         </div>
         <div style="flex-grow:1;">
-            <textarea class="textarea"></textarea>
+            <textarea class="textarea">{target()}</textarea>
         </div>
     </div>
 
     <script>
+     this.node_json = null;
+     this.clickConvertButton = () => {
+         this.node_json = new Wbs().makeTreeNode(opts.source);
+         this.update();
+     };
+    </script>
+
+    <script>
+     this.target = () => {
+         if (!this.node_json)
+             return '';
+
+         return JSON.stringify(this.node_json, null, "   ");
+     };
      this.source = () => {
          return JSON.stringify(opts.source, null, "   ");
      };

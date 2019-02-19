@@ -25,9 +25,10 @@
     <script>
      this.datakeys = [
          { code: 'projects',     name: 'Projects' },
-         { code: 'wbs',         name: 'Wbs' },
+         { code: 'wbs',          name: 'Wbs' },
          { code: 'workpackages', name: 'Workpackage' },
-         { code: 'edges',       name: 'Edges' },
+         { code: 'edges',        name: 'Edges' },
+         { code: 'tree',         name: 'Tree' },
      ];
      this.selected = this.datakeys[0].code;
      this.clickDatakeyButton = (e) => {
@@ -35,6 +36,10 @@
          this.update();
      };
      this.getJsonData = () => {
+         // TODO: きちんとしよう。
+         if (this.selected=='tree')
+             return '';
+
          let label = 'example.' + this.selected + '.list';
 
          let state = STORE.get(label);

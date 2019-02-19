@@ -58,7 +58,7 @@ class Store extends Vanilla_Redux_Store {
         return [
             {
                 _class: "WBS",
-                _id: this._id_counter++,
+                _id: 2,
                 description: "",
                 name: "WBS 1",
                 result: null,
@@ -66,7 +66,7 @@ class Store extends Vanilla_Redux_Store {
             },
             {
                 _class: "WBS",
-                _id: this._id_counter++,
+                _id: 3,
                 description: "",
                 name: "WBS 2",
                 result: null,
@@ -75,14 +75,17 @@ class Store extends Vanilla_Redux_Store {
         ];
     }
     initExampleWorkpackage () {
+        let start = new Date();
+        let end   = moment().add(1, 'day').toDate();
+
         return [
             {
                 _class: "WORKPACKAGE",
                 _id: 10,
                 description: "",
                 name: "Workpackage 1",
-                result:   {_id: 461, start: new Date(), end: new Date(), _class: "RESULT"},
-                schedule: {_id: 459, start: new Date(), end: new Date(), _class: "SCHEDULE"},
+                result:   {_id: 461, start: start, end: end, _class: "RESULT"   },
+                schedule: {_id: 459, start: start, end: end, _class: "SCHEDULE" },
             },
         ];
     }

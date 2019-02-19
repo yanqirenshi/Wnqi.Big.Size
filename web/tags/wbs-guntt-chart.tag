@@ -8,8 +8,16 @@
          let tree = this.opts.data ? this.opts.data : [];
          let selector = 'svg.chart-yabane';
 
+         let options = {
+             stage: {
+                 selector: selector,
+                 padding: 11,
+             },
+             scale: this.opts.options.scale,
+         };
+
          let d3yabane = new D3jsYabane({ callback: this.opts.callback })
-             .config(selector, this.opts.start, this.opts.end)
+             .config(options)
              .setScale()
              .makeStage()
              .data(tree) // with sizing and positioning

@@ -1,3 +1,23 @@
+class WbsNode {
+    constructor (core) {
+        this.label    = this.initNodeLabel(core);
+        this.children = { ht:{}, list: [] };
+        this.schedule = core.schedule ? core.schedule : null;
+        this.result   =   core.result   ? core.result   : null;
+        this._id      = core._id;
+        this._class   = core._class;
+        this._core    = core;
+    }
+    initNodeLabel (core) {
+        if (core.name)
+            return core.name;
+        return '???';
+    }
+}
+
+class WbsNodeTerm {
+}
+
 class Wbs {
     ensuserArray (obj) {
         if (obj.isArray()) return obj;
@@ -167,15 +187,21 @@ class Wbs {
     treeNodeLabel (core) {
         if (core.name)
             return core.name;
+
+        if (core.label)
+            return core.label;
+
         return '???';
     }
     makeTreeNode (core) {
         return {
             label: this.treeNodeLabel(core),
-            core: core,
             children: { ht:{}, list: [] },
+            schedule: core.schedule ? core.schedule : null,
+            result:   core.result   ? core.result   : null,
             _id: core._id,
             _class: core._class,
+            _core: core,
         };
     }
     getEdgeChildNodePoolKey (_class) {
@@ -229,12 +255,12 @@ class Wbs {
         let result_null_exist = false;
 
         for (let child of children) {
-            let child_schedule = child.core.schedule;
+            let child_schedule = child._core.schedule;
 
             schedule.start = this.mergeSchedule('start', schedule, child_schedule);
             schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
 
-            let child_result = child.core.result;
+            let child_result = child._core.result;
             result.start = this.mergeResult('start', result, child_result);
             result.end   = this.mergeResult('end',   result, child_result);
 
@@ -248,7 +274,7 @@ class Wbs {
         return { schedule: schedule, result: result };
     }
     addChildren(parent_node, pool) {
-        let parent = parent_node.core;
+        let parent = parent_node._core;
         let children = parent_node.children;
 
         for (let edge of pool.edges.list)
@@ -259,7 +285,7 @@ class Wbs {
                 this.addChildren(child_node, pool);
 
                 children.list.push(child_node);
-                children.ht[child_node.core._id] = child_node;
+                children.ht[child_node._core._id] = child_node;
             }
 
         if (parent._class!='WORKPACKAGE') {

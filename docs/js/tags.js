@@ -184,8 +184,16 @@ riot.tag2('wbs-guntt-chart', '<div style="overflow:auto;"> <svg class="chart-yab
          let tree = this.opts.data ? this.opts.data : [];
          let selector = 'svg.chart-yabane';
 
+         let options = {
+             stage: {
+                 selector: selector,
+                 padding: 11,
+             },
+             scale: this.opts.options.scale,
+         };
+
          let d3yabane = new D3jsYabane({ callback: this.opts.callback })
-             .config(selector, this.opts.start, this.opts.end)
+             .config(options)
              .setScale()
              .makeStage()
              .data(tree)
@@ -255,9 +263,9 @@ riot.tag2('example', '', '', '', function(opts) {
 
 riot.tag2('example_page_root', '<section-header title="Example"></section-header> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example_page_tab_readme class="hide"></example_page_tab_readme> <example_page_tab_tab1 class="hide"></example_page_tab_tab1> <example_page_tab_tab2 class="hide"></example_page_tab_tab2> </div> <section-footer></section-footer>', '', '', function(opts) {
      this.page_tabs = new PageTabs([
-         {code: 'readme', label: 'Data',      tag: 'example_page_tab_readme' },
-         {code: 'tab1',   label: 'WBS Table',   tag: 'example_page_tab_tab1' },
-         {code: 'tab2',   label: 'Guntt Chart', tag: 'example_page_tab_tab2' },
+         {code: 'readme',   label: 'Data',               tag: 'example_page_tab_readme' },
+         {code: 'tab1',     label: 'WBS Table',          tag: 'example_page_tab_tab1' },
+         {code: 'tab2',     label: 'Guntt Chart',        tag: 'example_page_tab_tab2' },
      ]);
 
      this.on('mount', () => {
@@ -274,9 +282,10 @@ riot.tag2('example_page_root', '<section-header title="Example"></section-header
 riot.tag2('example_page_tab_readme', '<section class="section"> <div class="container"> <div class="contents"> <div style="display:flex;"> <div style="display:flex; flex-direction:column;"> <button each="{datakey in datakeys}" class="button {isActive(datakey.code)}" code="{datakey.code}" onclick="{clickDatakeyButton}"> {datakey.name} </button> </div> <div style="flex-grow:1; margin-left:11px;"> <textarea class="textarea" style="height: calc(100vh - 333px); max-height:none;">{getJsonData()}</textarea> <div style="margin-top:11px;"> <button class="button">Commit</button> </div> </div> </div> </div> </div> </section>', 'example_page_tab_readme .button { margin-bottom: 11px; border-radius: 0px; }', '', function(opts) {
      this.datakeys = [
          { code: 'projects',     name: 'Projects' },
-         { code: 'wbs',         name: 'Wbs' },
+         { code: 'wbs',          name: 'Wbs' },
          { code: 'workpackages', name: 'Workpackage' },
-         { code: 'edges',       name: 'Edges' },
+         { code: 'edges',        name: 'Edges' },
+         { code: 'tree',         name: 'Tree' },
      ];
      this.selected = this.datakeys[0].code;
      this.clickDatakeyButton = (e) => {
@@ -284,6 +293,10 @@ riot.tag2('example_page_tab_readme', '<section class="section"> <div class="cont
          this.update();
      };
      this.getJsonData = () => {
+
+         if (this.selected=='tree')
+             return '';
+
          let label = 'example.' + this.selected + '.list';
 
          let state = STORE.get(label);
@@ -321,27 +334,37 @@ riot.tag2('example_page_tab_tab1', '<section class="section"> <div class="contai
      };
 });
 
-riot.tag2('example_page_tab_tab2', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart></wbs-guntt-chart> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-6">Data</h1> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('example_page_tab_tab2', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-6">Data</h1> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
+
+     this.options = {
+         scale: {
+             x: {
+                 cycle: 'days',
+                 tick: 88,
+                 start: moment(now).add(-3, 'd'),
+                 end:   moment(now).add( 3, 'w'),
+             }
+         },
+     };
+
      this.data = () => {
-         let state = {
-             projects:     { ht: {}, list: [] },
-             wbs:          { ht: {}, list: [] },
-             workpackages: { ht: {}, list: [] },
-             edges:        { ht: {}, list: [] },
-         }
-         let options = {
-         }
+         let state = STORE.get('example');
+         let options = {}
 
          if (state.projects.list.length==0)
              return [];
 
          let wbs = new Wbs();
+         let x = state.projects.list.map((project) => {
+             return wbs.composeTree(
+                 project,
+                 state.wbs,
+                 state.workpackages,
+                 state.edges)
+         });
 
-         return wbs.composeTree(
-             state.projects.list[0],
-             state.wbs,
-             state.workpackages,
-             state.edges);
+         return x;
      };
 });
 
@@ -362,7 +385,19 @@ riot.tag2('models', '', '', '', function(opts) {
      this.on('update', () => { this.draw(); });
 });
 
-riot.tag2('models_converter', '<div style="display:flex;"> <div style="flex-grow:1;"> <textarea class="textarea">{source()}</textarea> </div> <div> <button class="button">変換</button> </div> <div style="flex-grow:1;"> <textarea class="textarea"></textarea> </div> </div>', 'models_converter .button { margin-left:11px; margin-right:11px; height:100%; } models_converter .textarea { height: 555px; }', '', function(opts) {
+riot.tag2('models_converter', '<div style="display:flex;"> <div style="flex-grow:1;"> <textarea class="textarea">{source()}</textarea> </div> <div> <button class="button" onclick="{clickConvertButton}">変換</button> </div> <div style="flex-grow:1;"> <textarea class="textarea">{target()}</textarea> </div> </div>', 'models_converter .button { margin-left:11px; margin-right:11px; height:100%; } models_converter .textarea { height: 555px; }', '', function(opts) {
+     this.node_json = null;
+     this.clickConvertButton = () => {
+         this.node_json = new Wbs().makeTreeNode(opts.source);
+         this.update();
+     };
+
+     this.target = () => {
+         if (!this.node_json)
+             return '';
+
+         return JSON.stringify(this.node_json, null, "   ");
+     };
      this.source = () => {
          return JSON.stringify(opts.source, null, "   ");
      };
