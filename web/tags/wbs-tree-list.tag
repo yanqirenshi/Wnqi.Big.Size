@@ -17,32 +17,57 @@
             </tr>
         </thead>
         <tbody>
-            <tr each={tableData()} class={tool.projectClass(core._class)}>
-                <td nowrap><a href="{tool.hashWbsPage(core._id, core._class)}">{core._id}</a></td>
+            <tr each={tableData()} class={tool.projectClass(_core._class)}>
+                <td nowrap>
+                    <a href="{tool.hashWbsPage(_core._id, _core._class)}">{_core._id}</a>
+                </td>
+
                 <td nowrap>
                     <span class="tree-mergin">{tool.margin(_level)}</span>
-                    <span>{core.name}</span>
+                    <span>{_core.name}</span>
                 </td>
-                <td class="{_class}" nowrap>{tool.date2str(term(core,'schedule','start'))}</td>
-                <td class="week {_class}" nowrap>{tool.date2week(term(core,'schedule','start'))}</td>
 
-                <td class="{_class}" nowrap>{tool.date2str(term(core,'schedule','end'))}</td>
-                <td class="week {_class}" nowrap>{tool.date2week(term(core,'schedule','end'))}</td>
+                <td class="{_class}" nowrap>
+                    {tool.date2str(term(_core,'schedule','start'))}
+                </td>
 
-                <td class="{_class}" nowrap>{tool.date2str(term(core,'result','start'))}</td>
-                <td class="week {_class}" nowrap>{tool.date2week(term(core,'result','start'))}</td>
+                <td class="week {_class}" nowrap>
+                    {tool.date2week(term(_core,'schedule','start'))}
+                </td>
 
-                <td class="{_class}" nowrap>{tool.date2str(term(core,'result','end'))}</td>
-                <td class="week {_class}" nowrap>{tool.date2week(term(core,'result','end'))}</td>
+                <td class="{_class}" nowrap>
+                    {tool.date2str(term(_core,'schedule','end'))}
+                </td>
+
+                <td class="week {_class}" nowrap>
+                    {tool.date2week(term(_core,'schedule','end'))}
+                </td>
+
+                <td class="{_class}" nowrap>
+                    {tool.date2str(term(_core,'result','start'))}
+                </td>
+
+                <td class="week {_class}" nowrap>
+                    {tool.date2week(term(_core,'result','start'))}
+                </td>
+
+                <td class="{_class}" nowrap>
+                    {tool.date2str(term(_core,'result','end'))}
+                </td>
+
+                <td class="week {_class}" nowrap>
+                    {tool.date2week(term(_core,'result','end'))}
+                </td>
+
                 <td class="operators {hideOperators()}">
                     <button class="button is-small add-child   {hideAddChildOperator(this)}"
                             onclick={clickAddChild}
-                            node_id={core._id}>
+                            node_id={_core._id}>
                         子を追加
                     </button>
                     <button class="button is-small delete-node {hideDeleteOperator(this)}"
                             onclick={clickDeleteWp}
-                            node_id={core._id}>
+                            node_id={_core._id}>
                         削除
                     </button>
                 </td>

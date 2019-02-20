@@ -2,21 +2,27 @@
     <section class="section">
         <div class="container">
             <div class="contents">
-                <wbs-tree-list></wbs-tree-list>
+                <wbs-tree-list data={data()}
+                               options={wbs_list_options}></wbs-tree-list>
             </div>
         </div>
     </section>
 
     <script>
+     this.wbs_list_options = {
+         hide: {
+             wbs: {
+                 finished: false
+             },
+             workpackage: {
+                 finished: false
+             }
+         }
+     };
+
      this.data = () => {
-         let state = {
-             projects:     { ht: {}, list: [] },
-             wbs:          { ht: {}, list: [] },
-             workpackages: { ht: {}, list: [] },
-             edges:        { ht: {}, list: [] },
-         }
-         let options = {
-         }
+         let state = STORE.get('example');
+         let options = this.wbs_list_options;
 
          if (state.projects.list.length==0)
              return [];

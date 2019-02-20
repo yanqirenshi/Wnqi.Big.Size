@@ -201,7 +201,7 @@ riot.tag2('wbs-guntt-chart', '<div style="overflow:auto;"> <svg class="chart-yab
      });
 });
 
-riot.tag2('wbs-tree-list', '<table class="table is-bordered is-narrow is-hoverable is-fullwidth"> <thead> <tr> <th rowspan="2">Code</th> <th rowspan="2">Name</th> <th colspan="4">Schedule</th> <th colspan="4">Result</th> <th class="{hideOperators()}" rowspan="2">操作</th> </tr> <tr> <th colspan="2">start</th> <th colspan="2">end</th> <th colspan="2">start</th> <th colspan="2">end</th> </tr> </thead> <tbody> <tr each="{tableData()}" class="{tool.projectClass(core._class)}"> <td nowrap><a href="{tool.hashWbsPage(core._id, core._class)}">{core._id}</a></td> <td nowrap> <span class="tree-mergin">{tool.margin(_level)}</span> <span>{core.name}</span> </td> <td class="{_class}" nowrap>{tool.date2str(term(core,\'schedule\',\'start\'))}</td> <td class="week {_class}" nowrap>{tool.date2week(term(core,\'schedule\',\'start\'))}</td> <td class="{_class}" nowrap>{tool.date2str(term(core,\'schedule\',\'end\'))}</td> <td class="week {_class}" nowrap>{tool.date2week(term(core,\'schedule\',\'end\'))}</td> <td class="{_class}" nowrap>{tool.date2str(term(core,\'result\',\'start\'))}</td> <td class="week {_class}" nowrap>{tool.date2week(term(core,\'result\',\'start\'))}</td> <td class="{_class}" nowrap>{tool.date2str(term(core,\'result\',\'end\'))}</td> <td class="week {_class}" nowrap>{tool.date2week(term(core,\'result\',\'end\'))}</td> <td class="operators {hideOperators()}"> <button class="button is-small add-child {hideAddChildOperator(this)}" onclick="{clickAddChild}" node_id="{core._id}"> 子を追加 </button> <button class="button is-small delete-node {hideDeleteOperator(this)}" onclick="{clickDeleteWp}" node_id="{core._id}"> 削除 </button> </td> </tr> </tbody> </table>', 'wbs-tree-list .table th { background: #EAE2D6; color: #867666; font-size: 12px; vertical-align: middle; text-align: center; } wbs-tree-list .table td { font-size: 12px; vertical-align: middle; } wbs-tree-list .table tr.project td { font-size: 16px; font-weight: bold; } wbs-tree-list .table tr.wbs td { font-size: 14px; font-weight: bold; } wbs-tree-list td.WBS { color: #888888; } wbs-tree-list td.PROJECT { color: #666666; } wbs-tree-list td.operators { text-align: center; } wbs-tree-list td.operators > button.button { width: 100%; } wbs-tree-list td.operators > button.button.add-child:hover { background: #89c3eb; color: #ffffff; font-weight: bold; } wbs-tree-list td.operators > button.button.delete-node:hover { background: #ec6d71; color: #ffffff; font-weight: bold; } wbs-tree-list span.tree-mergin { font-size: 12px; font-weight: normal; } wbs-tree-list .table td.week { font-size: 12px; padding-left: 1px; padding-right: 1px; text-align: center; }', '', function(opts) {
+riot.tag2('wbs-tree-list', '<table class="table is-bordered is-narrow is-hoverable is-fullwidth"> <thead> <tr> <th rowspan="2">Code</th> <th rowspan="2">Name</th> <th colspan="4">Schedule</th> <th colspan="4">Result</th> <th class="{hideOperators()}" rowspan="2">操作</th> </tr> <tr> <th colspan="2">start</th> <th colspan="2">end</th> <th colspan="2">start</th> <th colspan="2">end</th> </tr> </thead> <tbody> <tr each="{tableData()}" class="{tool.projectClass(_core._class)}"> <td nowrap> <a href="{tool.hashWbsPage(_core._id, _core._class)}">{_core._id}</a> </td> <td nowrap> <span class="tree-mergin">{tool.margin(_level)}</span> <span>{_core.name}</span> </td> <td class="{_class}" nowrap> {tool.date2str(term(_core,\'schedule\',\'start\'))} </td> <td class="week {_class}" nowrap> {tool.date2week(term(_core,\'schedule\',\'start\'))} </td> <td class="{_class}" nowrap> {tool.date2str(term(_core,\'schedule\',\'end\'))} </td> <td class="week {_class}" nowrap> {tool.date2week(term(_core,\'schedule\',\'end\'))} </td> <td class="{_class}" nowrap> {tool.date2str(term(_core,\'result\',\'start\'))} </td> <td class="week {_class}" nowrap> {tool.date2week(term(_core,\'result\',\'start\'))} </td> <td class="{_class}" nowrap> {tool.date2str(term(_core,\'result\',\'end\'))} </td> <td class="week {_class}" nowrap> {tool.date2week(term(_core,\'result\',\'end\'))} </td> <td class="operators {hideOperators()}"> <button class="button is-small add-child {hideAddChildOperator(this)}" onclick="{clickAddChild}" node_id="{_core._id}"> 子を追加 </button> <button class="button is-small delete-node {hideDeleteOperator(this)}" onclick="{clickDeleteWp}" node_id="{_core._id}"> 削除 </button> </td> </tr> </tbody> </table>', 'wbs-tree-list .table th { background: #EAE2D6; color: #867666; font-size: 12px; vertical-align: middle; text-align: center; } wbs-tree-list .table td { font-size: 12px; vertical-align: middle; } wbs-tree-list .table tr.project td { font-size: 16px; font-weight: bold; } wbs-tree-list .table tr.wbs td { font-size: 14px; font-weight: bold; } wbs-tree-list td.WBS { color: #888888; } wbs-tree-list td.PROJECT { color: #666666; } wbs-tree-list td.operators { text-align: center; } wbs-tree-list td.operators > button.button { width: 100%; } wbs-tree-list td.operators > button.button.add-child:hover { background: #89c3eb; color: #ffffff; font-weight: bold; } wbs-tree-list td.operators > button.button.delete-node:hover { background: #ec6d71; color: #ffffff; font-weight: bold; } wbs-tree-list span.tree-mergin { font-size: 12px; font-weight: normal; } wbs-tree-list .table td.week { font-size: 12px; padding-left: 1px; padding-right: 1px; text-align: center; }', '', function(opts) {
      this.clickAddChild = (e) => {
          this.opts.callback('open-add-child', {
              _id: e.target.getAttribute('node_id')
@@ -313,16 +313,21 @@ riot.tag2('example_page_tab_guntt', '<section class="section"> <div class="conta
      };
 });
 
-riot.tag2('example_page_tab_list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list></wbs-tree-list> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('example_page_tab_list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list data="{data()}" options="{wbs_list_options}"></wbs-tree-list> </div> </div> </section>', '', '', function(opts) {
+     this.wbs_list_options = {
+         hide: {
+             wbs: {
+                 finished: false
+             },
+             workpackage: {
+                 finished: false
+             }
+         }
+     };
+
      this.data = () => {
-         let state = {
-             projects:     { ht: {}, list: [] },
-             wbs:          { ht: {}, list: [] },
-             workpackages: { ht: {}, list: [] },
-             edges:        { ht: {}, list: [] },
-         }
-         let options = {
-         }
+         let state = STORE.get('example');
+         let options = this.wbs_list_options;
 
          if (state.projects.list.length==0)
              return [];
