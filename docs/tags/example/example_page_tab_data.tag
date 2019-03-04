@@ -1,4 +1,5 @@
-<example_page_tab_readme>
+<example_page_tab_data>
+
     <section class="section">
         <div class="container">
             <div class="contents">
@@ -55,9 +56,9 @@
     </script>
 
     <style>
-     example_page_tab_readme .button {
+     example_page_tab_data .button {
          margin-bottom: 11px;
          border-radius: 0px;
      }
     </style>
-</example_page_tab_readme>
+</example_page_tab_data>
