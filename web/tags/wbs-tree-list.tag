@@ -2,65 +2,68 @@
     <table class="table is-bordered is-narrow is-hoverable is-fullwidth">
         <thead>
             <tr>
-                <th rowspan="2">Code</th>
-                <th rowspan="2">Name</th>
-                <th colspan="4">Schedule</th>
-                <th colspan="4">Result</th>
-                <th class={hideOperators()}
-                    rowspan="2">操作</th>
+                <th rowspan="2" class={isHideCol('code')}>Code</th>
+                <th rowspan="2" class={isHideCol('name')}>Name</th>
+                <th colspan="4" class={isHideCol('schedule')}>Schedule</th>
+                <th colspan="4" class={isHideCol('result')}>Result</th>
+                <th rowspan="2"
+                    class="{isHideCol('operators')} {hideOperators()}">
+                    操作
+                </th>
+                <th rowspan="2" class={isHideCol('description')}>Description</th>
             </tr>
             <tr>
-                <th colspan="2">start</th>
-                <th colspan="2">end</th>
-                <th colspan="2">start</th>
-                <th colspan="2">end</th>
+                <th colspan="2" class={isHideCol('schedule')}>start</th>
+                <th colspan="2" class={isHideCol('schedule')}>end</th>
+                <th colspan="2" class={isHideCol('result')}>start</th>
+                <th colspan="2" class={isHideCol('result')}>end</th>
             </tr>
         </thead>
         <tbody>
             <tr each={tableData()} class={tool.projectClass(_core._class)}>
-                <td nowrap>
+                <td nowrap class="{isHideCol('code')}">
                     <a href="{tool.hashWbsPage(_core._id, _core._class)}">{_core._id}</a>
                 </td>
 
-                <td nowrap>
+                <td nowrap class="{isHideCol('name')}">
                     <span class="tree-mergin">{tool.margin(_level)}</span>
                     <span>{_core.name}</span>
                 </td>
 
-                <td class="{_class}" nowrap>
+                <td class="{_class} {isHideCol('schedule')}" nowrap>
                     {tool.date2str(term(_core,'schedule','start'))}
                 </td>
 
-                <td class="week {_class}" nowrap>
+                <td class="week {_class} {isHideCol('schedule')}" nowrap>
                     {tool.date2week(term(_core,'schedule','start'))}
                 </td>
 
-                <td class="{_class}" nowrap>
+                <td class="{_class} {isHideCol('schedule')}" nowrap>
                     {tool.date2str(term(_core,'schedule','end'))}
                 </td>
 
-                <td class="week {_class}" nowrap>
+                <td class="week {_class} {isHideCol('schedule')}" nowrap>
                     {tool.date2week(term(_core,'schedule','end'))}
                 </td>
 
-                <td class="{_class}" nowrap>
+                <td class="{_class} {isHideCol('result')}" nowrap>
                     {tool.date2str(term(_core,'result','start'))}
                 </td>
 
-                <td class="week {_class}" nowrap>
+                <td class="week {_class} {isHideCol('result')}" nowrap>
                     {tool.date2week(term(_core,'result','start'))}
                 </td>
 
-                <td class="{_class}" nowrap>
+                <td class="{_class} {isHideCol('result')}" nowrap>
                     {tool.date2str(term(_core,'result','end'))}
                 </td>
 
-                <td class="week {_class}" nowrap>
+                <td class="week {_class} {isHideCol('result')}" nowrap>
                     {tool.date2week(term(_core,'result','end'))}
                 </td>
 
-                <td class="operators {hideOperators()}">
-                    <button class="button is-small add-child   {hideAddChildOperator(this)}"
+                <td class="operators {isHideCol('operators')} {hideOperators()}">
+                    <button class="button is-small add-child {hideAddChildOperator(this)}"
                             onclick={clickAddChild}
                             node_id={_core._id}>
                         子を追加
@@ -71,10 +74,22 @@
                         削除
                     </button>
                 </td>
+
+                <td nowrap class="{isHideCol('description')}">
+                    <span>{_core.description}</span>
+                </td>
+
             </tr>
         </tbody>
     </table>
 
+    <script>
+     this.tool = new Wbs();
+    </script>
+
+    <!-- ---------- -->
+    <!--   Events   -->
+    <!-- ---------- -->
     <script>
      this.clickAddChild = (e) => {
          this.opts.callback('open-add-child', {
@@ -86,10 +101,35 @@
              _id: e.target.getAttribute('node_id')
          });
      };
+     STORE.subscribe((action) => {
+         if (action.type=='FETCHED-PROJECT-TREE')
+             this.update();
+
+         if (action.type=='MOVE-PAGE')
+             this.update();
+     });
     </script>
 
-
+    <!-- -------- -->
+    <!--   Hide   -->
+    <!-- -------- -->
     <script>
+     this.options = { columns: this.opts.options.columns };
+     this.isHideCol = (keys_str) => {
+         let keys = keys_str.split('.');
+         let options = { children: this.options.columns };
+
+         for (let key of keys) {
+             let next = options.children[key]
+
+             if (!next)
+                 return '';
+
+             options = next;
+         }
+
+         return options.hide ? 'hide' : '';
+     };
      this.hideOperators = () => {
          if (!this.opts.options ||
              !this.opts.options.security)
@@ -107,8 +147,10 @@
      };
     </script>
 
+    <!-- -------- -->
+    <!--   Data   -->
+    <!-- -------- -->
     <script>
-     this.tool = new Wbs();
      this.term = (data, key, type) => {
          if (!data || !data[key]) return null;
 
@@ -117,17 +159,11 @@
      this.tableData = () => {
          let data = this.opts.data;
 
-         if (!data) return [];
+         if (!data)
+             return [];
 
          return data;
      };
-     STORE.subscribe((action) => {
-         if (action.type=='FETCHED-PROJECT-TREE')
-             this.update();
-
-         if (action.type=='MOVE-PAGE')
-             this.update();
-     });
     </script>
 
     <style>
