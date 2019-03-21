@@ -23,6 +23,19 @@
                             <li>Guntt Chart</li>
                         </ol>
                     </div>
+
+                    <section class="section">
+                        <div class="container">
+                            <h1 class="title">CDN</h1>
+
+                            <div class="contents">
+                                <p><a href="/dist/beta/js/Wbs.js">https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/js/Wbs.js</a></p>
+                                <p><a href="/dist/beta/tags/wbs-guntt-chart.tag">https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-guntt-chart.tag</a></p>
+                                <p><a href="/dist/beta/tags/wbs-tree-list.tag">https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-tree-list.tag</a></p>
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
             </section>
 
