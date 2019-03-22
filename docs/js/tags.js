@@ -224,6 +224,9 @@ riot.tag2('wbs-tree-list', '<table class="table is-bordered is-narrow is-hoverab
 
      this.options = { columns: this.opts.options.columns };
      this.isHideCol = (keys_str) => {
+         if (!this.options.columns)
+             return '';
+
          let keys = keys_str.split('.');
          let options = { children: this.options.columns };
 
