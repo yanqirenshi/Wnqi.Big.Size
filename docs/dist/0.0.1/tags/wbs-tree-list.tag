@@ -116,6 +116,9 @@
     <script>
      this.options = { columns: this.opts.options.columns };
      this.isHideCol = (keys_str) => {
+         if (!this.options.columns)
+             return '';
+
          let keys = keys_str.split('.');
          let options = { children: this.options.columns };
 
