@@ -1,9 +1,14 @@
+/**
+ * WBS階層のノードを表現するクラス。
+ * @example
+ * let x = new  WbsNode(core);
+ */
 class WbsNode {
     constructor (core) {
         this.label    = this.initNodeLabel(core);
         this.children = { ht:{}, list: [] };
         this.schedule = core.schedule ? core.schedule : null;
-        this.result   =   core.result   ? core.result   : null;
+        this.result   = core.result   ? core.result   : null;
         this._id      = core._id;
         this._class   = core._class;
         this._core    = core;
@@ -15,9 +20,19 @@ class WbsNode {
     }
 }
 
+/**
+ * WBSノードの期間を表現するクラス
+ * @example
+ * let x = new  WbsNodeTerm(core);
+ */
 class WbsNodeTerm {
 }
 
+/**
+ * this is MyClass description.
+ * @example
+ * let x = new  Wbs(core);
+ */
 class Wbs {
     ensuserArray (obj) {
         if (obj.isArray()) return obj;
@@ -25,7 +40,7 @@ class Wbs {
         return [obj];
     }
     /* **************************************************************** *
-        Action
+     *  Action
      * **************************************************************** */
     fixWorkpackageTerm (data) {
         if (data.schedule.start) data.schedule.start = new Date(data.schedule.start);
@@ -92,11 +107,19 @@ class Wbs {
         return term;
     }
     /* **************************************************************** *
-        View
+     *  Filter
      * **************************************************************** */
-    flattenInitOptions (options_in) {
-        if (options_in) return options_in;
+    toPool (list) {
+        if (!list)
+            return [];
 
+        let out = { list: list, ht: {} };
+        for (let node of list)
+            out.ht[node._id] = node;
+
+        return out;
+    }
+    filterOptionsTemplate () {
         return {
             hide: {
                 wbs: {
@@ -105,46 +128,105 @@ class Wbs {
                 workpackage: {
                     finished: false
                 }
-            }
+            },
+            term: {
+                start: null,
+                end: null,
+            },
         };
     }
-    flatten (tree, level, options_in) {
-        let options = this.flattenInitOptions(options_in);
-        let out = [];
+    initFilterOptions (options_in) {
+        let options = this.filterOptionsTemplate();
 
-        for (let node of tree) {
-            node._level = level;
+        if (!options_in)
+            return options;
 
-            if (node._class=="WBS") {
-                if (options.hide.wbs.finished) {
-                    if (!node.result.end)
-                        out.push(node);
-                } else {
-                    out.push(node);
-                }
-            } else if (node._class=="WORKPACKAGE") {
-                if (options.hide.workpackage.finished) {
-                    if (!node.result.end)
-                        out.push(node);
-                } else {
-                    out.push(node);
-                }
+        if (options_in.hide)
+            options.hide = Object.assign({}, options_in.hide);
+
+        if (options_in.term)
+            options.term = Object.assign({}, options_in.term);
+
+        return options;
+    }
+    isInTerm (node, options) {
+        //               |       |
+        //  x :  s---e   |       |
+        //  o :  s-------e       |
+        //  o :  s----------e    |
+        //  o :  s---------------e
+        //  o :  s-------------------e
+        //  o :          s--e    |
+        //  o :          s-------e
+        //  o :          s-----------e
+        //  o :          |  s--e |
+        //  o :          |  s----e
+        //  o :          |  s--------e
+        //  x :          |       | s---e
+        //      ---------f-------t----------->
+        //               |       |
+
+        if (node.schedule.start > options.term.end)
+            return false;
+
+        if (node.schedule.end < options.term.start)
+            return false;
+
+        return true;
+    }
+    isShowNode (node, options) {
+
+        if (options.term.start  && options.term.end &&
+            node.schedule.start && node.schedule.end)
+            if (!this.isInTerm(node, options))
+                return false;
+
+        if (node._class=="WBS") {
+            if (options.hide.wbs.finished) {
+                if (!node.result.end)
+                    return true;
             } else {
-                out.push(node);
+                return true;
             }
 
-            if (!node.children || node.children.length==0)
-                continue;
-
-            if (node._class=="WBS" && options.hide.wbs.finished && node.result.end)
-                continue;
-
-            let children = this.flatten(node.children.list, level + 1, options);
-            out = out.concat(children);
+            return false;
         }
 
-        return out;
+        if (node._class=="WORKPACKAGE") {
+            if (options.hide.workpackage.finished) {
+                if (!node.result.end)
+                    return true;
+            } else {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
+    filterChildren (children, options) {
+        let filterd_children = [];
+
+        for (let child of children.list)
+            if (this.isShowNode(child, options)) {
+                filterd_children.push(child);
+
+                child.children = this.filterChildren(child.children, options);
+            }
+
+        return this.toPool(filterd_children);
+    }
+    filter (tree, options) {
+        let filterd_tree = Object.assign({}, tree);
+
+        filterd_tree.children = this.filterChildren(filterd_tree.children, options);
+
+        return tree;
+    }
+    /* **************************************************************** *
+     *  ??? utility? このクラスでは利用していないな。。。。
+     * **************************************************************** */
     date2str (date) {
         if (!date)
             return '---';
@@ -182,7 +264,9 @@ class Wbs {
         return location.hash.split('/')[0] + '/' + cls.toLowerCase() + '/' +code;
     };
     /* **************************************************************** *
-        ComposeTree
+     *
+     *  ComposeTree
+     *
      * **************************************************************** */
     treeNodeLabel (core) {
         if (core.name)
@@ -277,6 +361,7 @@ class Wbs {
         let parent = parent_node._core;
         let children = parent_node.children;
 
+        // edges から 木構造を作る。
         for (let edge of pool.edges.list)
             if (edge.from_id==parent._id && edge.from_class==parent._class) {
                 let child = this.getEdgeChildNode(edge, pool);
@@ -288,6 +373,7 @@ class Wbs {
                 children.ht[child_node._core._id] = child_node;
             }
 
+        // term の設定
         if (parent._class!='WORKPACKAGE') {
             let terms = this.setTerms(parent_node, children.list);
 
@@ -303,7 +389,7 @@ class Wbs {
 
         return parent_node;
     }
-    composeTree (project, wbs, workpackages, edges) {
+    composeTree (project, wbs, workpackages, edges, options) {
         let out = [];
         let pool = {
             wbs: wbs,
@@ -313,16 +399,40 @@ class Wbs {
 
         let project_node = this.makeTreeNode(project);
 
-        return this.addChildren(project_node, pool);
-    }
-    composeTreeFlat (project, wbs, workpackages, edges, options) {
-        let tree = this.composeTree(project, wbs, workpackages, edges);
-        let flat_tree = this.flatten([tree], 0, options);
+        let tree = this.addChildren(project_node, pool);
 
-        return flat_tree;
+        if (!options)
+            return tree;
+
+        return this.filter(tree, this.initFilterOptions(options));
     }
     /* **************************************************************** *
-        find min start and max end
+     *  ComposeTreeFlat
+     * **************************************************************** */
+    flatten (tree, level) {
+        let out = [];
+
+        for (let node of tree) {
+            node._level = level;
+
+            out.push(node);
+
+            if (!node.children || node.children.length==0)
+                continue;
+
+            let children = this.flatten(node.children.list, level + 1);
+            out = out.concat(children);
+        }
+
+        return out;
+    }
+    composeTreeFlat (project, wbs, workpackages, edges, options) {
+        let tree = this.composeTree(project, wbs, workpackages, edges, options);
+
+        return this.flatten([tree], 0);
+    }
+    /* **************************************************************** *
+     *  find min start and max end
      * **************************************************************** */
     getSmallDate(a, b) {
         if (!a) return b;

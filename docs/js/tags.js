@@ -393,7 +393,25 @@ riot.tag2('example-list_page_tab_list', '<section class="section"> <div class="c
      ].join('\n');
 });
 
-riot.tag2('example-list_page_tab_option', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('example-list_page_tab_option', '<section class="section"> <div class="container"> <div class="contents"> <p> <pre>{x}</pre> </p> </div> </div> </section>', '', '', function(opts) {
+     this.x = [
+         '{',
+         '    hide: {',
+         '        wbs: {',
+         '            finished: false',
+         '        },',
+         '        workpackage: {',
+         '            finished: false',
+         '        }',
+         '    },',
+         '    {',
+         '        term: {',
+         '            start: null,',
+         '            end:   null,',
+         '        },',
+         '    },',
+         '}',
+     ].join('\n');
 });
 
 riot.tag2('example-list_page_tab_readme', '<section class="section"> <div class="container"> <h1 class="title">概要</h1> <div class="contents"> <p>WBS を表示させるために必要なことを説明します。</p> </div> </div> </section>', '', '', function(opts) {
