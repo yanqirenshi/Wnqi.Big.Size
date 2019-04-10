@@ -1,9 +1,14 @@
+/**
+ * WBS階層のノードを表現するクラス。
+ * @example
+ * let x = new  WbsNode(core);
+ */
 class WbsNode {
     constructor (core) {
         this.label    = this.initNodeLabel(core);
         this.children = { ht:{}, list: [] };
         this.schedule = core.schedule ? core.schedule : null;
-        this.result   =   core.result   ? core.result   : null;
+        this.result   = core.result   ? core.result   : null;
         this._id      = core._id;
         this._class   = core._class;
         this._core    = core;
@@ -15,9 +20,19 @@ class WbsNode {
     }
 }
 
+/**
+ * WBSノードの期間を表現するクラス
+ * @example
+ * let x = new  WbsNodeTerm(core);
+ */
 class WbsNodeTerm {
 }
 
+/**
+ * this is MyClass description.
+ * @example
+ * let x = new  Wbs(core);
+ */
 class Wbs {
     ensuserArray (obj) {
         if (obj.isArray()) return obj;

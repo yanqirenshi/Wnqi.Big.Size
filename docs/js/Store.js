@@ -15,9 +15,19 @@ class Store extends Vanilla_Redux_Store {
                 }
             },
             {
-                code: "example", menu_label: 'T:階',
+                code: "example-list",
+                menu_label: 'T:表',
                 active_section: 'root', home_section: 'root',
-                children: [{ code: 'root', tag: 'example_page_root' }],
+                children: [{ code: 'root', tag: 'example-list_page_root' }],
+                stye: {
+                    color: { 1: '#fdeff2', 2: '#e0e0e0', 3: '#e198b4', 4: '#ffffff', 5: '#eeeeee', 5: '#333333' }
+                }
+            },
+            {
+                code: "example-tree",
+                menu_label: 'T:階',
+                active_section: 'root', home_section: 'root',
+                children: [{ code: 'root', tag: 'example-tree_page_root' }],
                 stye: {
                     color: { 1: '#fdeff2', 2: '#e0e0e0', 3: '#e198b4', 4: '#ffffff', 5: '#eeeeee', 5: '#333333' }
                 }

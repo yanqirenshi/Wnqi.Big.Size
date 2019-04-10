@@ -1,4 +1,4 @@
-<example_page_tab_data>
+<example-tree_page_tab_data>
 
     <section class="section">
         <div class="container">
@@ -56,9 +56,9 @@
     </script>
 
     <style>
-     example_page_tab_data .button {
+     example-tree_page_tab_data .button {
          margin-bottom: 11px;
          border-radius: 0px;
      }
     </style>
-</example_page_tab_data>
+</example-tree_page_tab_data>

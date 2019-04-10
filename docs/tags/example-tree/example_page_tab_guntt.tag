@@ -1,4 +1,4 @@
-<example_page_tab_guntt>
+<example-tree_page_tab_guntt>
     <section class="section">
         <div class="container">
             <div class="contents">
@@ -43,4 +43,4 @@
          return x;
      };
     </script>
-</example_page_tab_guntt>
+</example-tree_page_tab_guntt>

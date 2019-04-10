@@ -275,19 +275,20 @@ riot.tag2('wbs-tree-list', '<table class="table is-bordered is-narrow is-hoverab
 riot.tag2('sections-list', '<table class="table"> <tbody> <tr each="{opts.data}"> <td><a href="{hash}">{name}</a></td> </tr> </tbody> </table>', '', '', function(opts) {
 });
 
-riot.tag2('example', '', '', '', function(opts) {
+riot.tag2('example-list', '', '', '', function(opts) {
      this.mixin(MIXINS.page);
 
      this.on('mount', () => { this.draw(); });
      this.on('update', () => { this.draw(); });
 });
 
-riot.tag2('example_page_root', '<section-header title="Example"></section-header> <div style="margin-top:22px;"></div> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example_page_tab_code class="hide"></example_page_tab_code> <example_page_tab_data class="hide"></example_page_tab_data> <example_page_tab_list class="hide"></example_page_tab_list> <example_page_tab_guntt class="hide"></example_page_tab_guntt> </div> <section-footer></section-footer>', '', '', function(opts) {
+riot.tag2('example-list_page_root', '<section-header title="Example"></section-header> <div style="margin-top:22px;"></div> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example-list_page_tab_readme class="hide"></example-list_page_tab_readme> <example-list_page_tab_code class="hide"></example-list_page_tab_code> <example-list_page_tab_data class="hide"></example-list_page_tab_data> <example-list_page_tab_option class="hide"></example-list_page_tab_option> <example-list_page_tab_list class="hide"></example-list_page_tab_list> </div> <section-footer></section-footer>', '', '', function(opts) {
      this.page_tabs = new PageTabs([
-         {code: 'code', label: 'Code',        tag: 'example_page_tab_code' },
-         {code: 'data', label: 'Data',        tag: 'example_page_tab_data' },
-         {code: 'tab1', label: 'WBS Table',   tag: 'example_page_tab_list' },
-         {code: 'tab2', label: 'Guntt Chart', tag: 'example_page_tab_guntt' },
+         {code: 'readme', label: 'Readme',      tag: 'example-list_page_tab_readme' },
+         {code: 'code',   label: 'Code',        tag: 'example-list_page_tab_code' },
+         {code: 'data',   label: 'Data',        tag: 'example-list_page_tab_data' },
+         {code: 'option', label: 'Option',      tag: 'example-list_page_tab_option' },
+         {code: 'list',   label: 'WBS Table',   tag: 'example-list_page_tab_list' },
      ]);
 
      this.on('mount', () => {
@@ -301,10 +302,10 @@ riot.tag2('example_page_root', '<section-header title="Example"></section-header
      };
 });
 
-riot.tag2('example_page_tab_code', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('example-list_page_tab_code', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
 });
 
-riot.tag2('example_page_tab_data', '<section class="section"> <div class="container"> <div class="contents"> <div style="display:flex;"> <div style="display:flex; flex-direction:column;"> <button each="{datakey in datakeys}" class="button {isActive(datakey.code)}" code="{datakey.code}" onclick="{clickDatakeyButton}"> {datakey.name} </button> </div> <div style="flex-grow:1; margin-left:11px;"> <textarea class="textarea" style="height: calc(100vh - 333px); max-height:none;">{getJsonData()}</textarea> <div style="margin-top:11px;"> <button class="button">Commit</button> </div> </div> </div> </div> </div> </section>', 'example_page_tab_data .button { margin-bottom: 11px; border-radius: 0px; }', '', function(opts) {
+riot.tag2('example-list_page_tab_data', '<section class="section"> <div class="container"> <div class="contents"> <div style="display:flex;"> <div style="display:flex; flex-direction:column;"> <button each="{datakey in datakeys}" class="button {isActive(datakey.code)}" code="{datakey.code}" onclick="{clickDatakeyButton}"> {datakey.name} </button> </div> <div style="flex-grow:1; margin-left:11px;"> <textarea class="textarea" style="height: calc(100vh - 333px); max-height:none;">{getJsonData()}</textarea> <div style="margin-top:11px;"> <button class="button">Commit</button> </div> </div> </div> </div> </div> </section>', 'example-list_page_tab_data .button { margin-bottom: 11px; border-radius: 0px; }', '', function(opts) {
      this.datakeys = [
          { code: 'projects',     name: 'Projects' },
          { code: 'wbs',          name: 'Wbs' },
@@ -335,41 +336,7 @@ riot.tag2('example_page_tab_data', '<section class="section"> <div class="contai
      };
 });
 
-riot.tag2('example_page_tab_guntt', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section>', '', '', function(opts) {
-     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
-
-     this.options = {
-         scale: {
-             x: {
-                 cycle: 'days',
-                 tick: 88,
-                 start: moment(now).add(-3, 'd'),
-                 end:   moment(now).add( 3, 'w'),
-             }
-         },
-     };
-
-     this.data = () => {
-         let state = STORE.get('example');
-         let options = {}
-
-         if (state.projects.list.length==0)
-             return [];
-
-         let wbs = new Wbs();
-         let x = state.projects.list.map((project) => {
-             return wbs.composeTree(
-                 project,
-                 state.wbs,
-                 state.workpackages,
-                 state.edges)
-         });
-
-         return x;
-     };
-});
-
-riot.tag2('example_page_tab_list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list data="{data()}" options="{wbs_list_options}"></wbs-tree-list> </div> </div> </section> <section class="section"> <div class="container"> <div class="contents"> <h1 class="title">Code</h1> <section class="section"> <div class="container"> <h1 class="title is-4">HTML</h1> <div class="contents"> <p><pre>{html_example}</pre></p> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-4">Javascript</h1> <div class="contents"> <p><pre>{js_example}</pre></p> </div> </div> </section> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('example-list_page_tab_list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list data="{data()}" options="{wbs_list_options}"></wbs-tree-list> </div> </div> </section> <section class="section"> <div class="container"> <div class="contents"> <h1 class="title">Code</h1> <section class="section"> <div class="container"> <h1 class="title is-4">HTML</h1> <div class="contents"> <p><pre>{html_example}</pre></p> </div> </div> </section> <section class="section"> <div class="container"> <h1 class="title is-4">Javascript</h1> <div class="contents"> <p><pre>{js_example}</pre></p> </div> </div> </section> </div> </div> </section>', '', '', function(opts) {
      this.wbs_list_options = {
          hide: {
              wbs: {
@@ -424,6 +391,113 @@ riot.tag2('example_page_tab_list', '<section class="section"> <div class="contai
          '        options);',
          '};',
      ].join('\n');
+});
+
+riot.tag2('example-list_page_tab_option', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+});
+
+riot.tag2('example-list_page_tab_readme', '<section class="section"> <div class="container"> <h1 class="title">概要</h1> <div class="contents"> <p>WBS を表示させるために必要なことを説明します。</p> </div> </div> </section>', '', '', function(opts) {
+});
+
+riot.tag2('example-tree', '', '', '', function(opts) {
+     this.mixin(MIXINS.page);
+
+     this.on('mount', () => { this.draw(); });
+     this.on('update', () => { this.draw(); });
+});
+
+riot.tag2('example-tree_page_root', '<section-header title="Example"></section-header> <div style="margin-top:22px;"></div> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <example-tree_page_tab_readme class="hide"></example-tree_page_tab_readme> <example-tree_page_tab_code class="hide"></example-tree_page_tab_code> <example-tree_page_tab_data class="hide"></example-tree_page_tab_data> <example-tree_page_tab_option class="hide"></example-tree_page_tab_option> <example-tree_page_tab_guntt class="hide"></example-tree_page_tab_guntt> </div> <section-footer></section-footer>', '', '', function(opts) {
+     this.page_tabs = new PageTabs([
+         {code: 'readme', label: 'Readme',      tag: 'example-tree_page_tab_readme' },
+         {code: 'code',   label: 'Code',        tag: 'example-tree_page_tab_code' },
+         {code: 'data',   label: 'Data',        tag: 'example-tree_page_tab_data' },
+         {code: 'option', label: 'Option',      tag: 'example-tree_page_tab_option' },
+         {code: 'guntt',  label: 'Wbs Tree',    tag: 'example-tree_page_tab_guntt' },
+     ]);
+
+     this.on('mount', () => {
+         this.page_tabs.switchTab(this.tags)
+         this.update();
+     });
+
+     this.clickTab = (e, action, data) => {
+         if (this.page_tabs.switchTab(this.tags, data.code))
+             this.update();
+     };
+});
+
+riot.tag2('example-tree_page_tab_code', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+});
+
+riot.tag2('example-tree_page_tab_data', '<section class="section"> <div class="container"> <div class="contents"> <div style="display:flex;"> <div style="display:flex; flex-direction:column;"> <button each="{datakey in datakeys}" class="button {isActive(datakey.code)}" code="{datakey.code}" onclick="{clickDatakeyButton}"> {datakey.name} </button> </div> <div style="flex-grow:1; margin-left:11px;"> <textarea class="textarea" style="height: calc(100vh - 333px); max-height:none;">{getJsonData()}</textarea> <div style="margin-top:11px;"> <button class="button">Commit</button> </div> </div> </div> </div> </div> </section>', 'example-tree_page_tab_data .button { margin-bottom: 11px; border-radius: 0px; }', '', function(opts) {
+     this.datakeys = [
+         { code: 'projects',     name: 'Projects' },
+         { code: 'wbs',          name: 'Wbs' },
+         { code: 'workpackages', name: 'Workpackage' },
+         { code: 'edges',        name: 'Edges' },
+         { code: 'tree',         name: 'Tree' },
+     ];
+     this.selected = this.datakeys[0].code;
+     this.clickDatakeyButton = (e) => {
+         this.selected = e.target.getAttribute('code');
+         this.update();
+     };
+     this.getJsonData = () => {
+
+         if (this.selected=='tree')
+             return '';
+
+         let label = 'example.' + this.selected + '.list';
+
+         let state = STORE.get(label);
+
+         return JSON.stringify(state, null, "   ");
+     };
+     this.isActive = (code) => {
+         if (code==this.selected)
+             return 'is-danger';
+         return '';
+     };
+});
+
+riot.tag2('example-tree_page_tab_guntt', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section>', '', '', function(opts) {
+     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
+
+     this.options = {
+         scale: {
+             x: {
+                 cycle: 'days',
+                 tick: 88,
+                 start: moment(now).add(-3, 'd'),
+                 end:   moment(now).add( 3, 'w'),
+             }
+         },
+     };
+
+     this.data = () => {
+         let state = STORE.get('example');
+         let options = {}
+
+         if (state.projects.list.length==0)
+             return [];
+
+         let wbs = new Wbs();
+         let x = state.projects.list.map((project) => {
+             return wbs.composeTree(
+                 project,
+                 state.wbs,
+                 state.workpackages,
+                 state.edges)
+         });
+
+         return x;
+     };
+});
+
+riot.tag2('example-tree_page_tab_option', '<section class="section"> <div class="container"> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+});
+
+riot.tag2('example-tree_page_tab_readme', '<section class="section"> <div class="container"> <h1 class="title">概要</h1> <div class="contents"> <p>WBS を表示させるために必要なことを説明します。</p> </div> </div> </section>', '', '', function(opts) {
 });
 
 riot.tag2('a-d3js', '<a-target-blank href="https://d3js.org/" label="D3.js"> </a-target-blank>', '', '', function(opts) {
@@ -519,8 +593,9 @@ riot.tag2('models_converter', '<div style="display:flex;"> <div style="flex-grow
      };
 });
 
-riot.tag2('models_page_root', '<section-header title="Models"></section-header> <div style="margin-top:22px;"></div> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <models_page_tab_project class="hide"></models_page_tab_project> <models_page_tab_wbs class="hide"></models_page_tab_wbs> <models_page_tab_workpackage class="hide"></models_page_tab_workpackage> <models_page_tab_edge class="hide"></models_page_tab_edge> </div> <section-footer></section-footer>', '', '', function(opts) {
+riot.tag2('models_page_root', '<section-header title="Models"></section-header> <div style="margin-top:22px;"></div> <page-tabs core="{page_tabs}" callback="{clickTab}"></page-tabs> <div> <models_page_tab_readme class="hide"></models_page_tab_readme> <models_page_tab_project class="hide"></models_page_tab_project> <models_page_tab_wbs class="hide"></models_page_tab_wbs> <models_page_tab_workpackage class="hide"></models_page_tab_workpackage> <models_page_tab_edge class="hide"></models_page_tab_edge> </div> <section-footer></section-footer>', '', '', function(opts) {
      this.page_tabs = new PageTabs([
+         {code: 'readme',      label: 'Readme',      tag: 'models_page_tab_readme' },
          {code: 'project',     label: 'project',     tag: 'models_page_tab_project' },
          {code: 'wbs',         label: 'wbs',         tag: 'models_page_tab_wbs' },
          {code: 'workpackage', label: 'workpackage', tag: 'models_page_tab_workpackage' },
@@ -548,6 +623,9 @@ riot.tag2('models_page_tab_project', '<section class="section"> <div class="cont
      this.model = () => {
          return STORE.get('models.project');
      };
+});
+
+riot.tag2('models_page_tab_readme', '<section class="section"> <div class="container"> <h1 class="title">概要</h1> <div class="contents"> <p>構成するデータについて説明します。</p> <p>他のタブでは、入力がどのようにシステムで利用するデータに変換されるかが確認できます。</p> </div> </div> </section>', '', '', function(opts) {
 });
 
 riot.tag2('models_page_tab_wbs', '<section class="section"> <div class="container"> <h1 class="title"></h1> <div class="contents"> <models_converter source="{model()}"></models_converter> </div> </div> </section>', '', '', function(opts) {

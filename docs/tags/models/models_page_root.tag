@@ -6,6 +6,7 @@
     <page-tabs core={page_tabs} callback={clickTab}></page-tabs>
 
     <div>
+        <models_page_tab_readme      class="hide"></models_page_tab_readme>
         <models_page_tab_project     class="hide"></models_page_tab_project>
         <models_page_tab_wbs         class="hide"></models_page_tab_wbs>
         <models_page_tab_workpackage class="hide"></models_page_tab_workpackage>
@@ -16,6 +17,7 @@
 
     <script>
      this.page_tabs = new PageTabs([
+         {code: 'readme',      label: 'Readme',      tag: 'models_page_tab_readme' },
          {code: 'project',     label: 'project',     tag: 'models_page_tab_project' },
          {code: 'wbs',         label: 'wbs',         tag: 'models_page_tab_wbs' },
          {code: 'workpackage', label: 'workpackage', tag: 'models_page_tab_workpackage' },
