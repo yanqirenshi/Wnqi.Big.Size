@@ -166,16 +166,15 @@ class Wbs {
         //      ---------f-------t----------->
         //               |       |
 
-        if (node.schedule.start > options.term.end)
+        if (moment(node.schedule.start).toDate() > moment(options.term.end).toDate())
             return false;
 
-        if (node.schedule.end < options.term.start)
+        if (moment(node.schedule.end).toDate() < moment(options.term.start).toDate())
             return false;
 
         return true;
     }
     isShowNode (node, options) {
-
         if (options.term.start  && options.term.end &&
             node.schedule.start && node.schedule.end)
             if (!this.isInTerm(node, options))
@@ -183,24 +182,24 @@ class Wbs {
 
         if (node._class=="WBS") {
             if (options.hide.wbs.finished) {
-                if (!node.result.end)
+                if (node.result.end)
+                    return false;
+                else
                     return true;
-            } else {
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         if (node._class=="WORKPACKAGE") {
             if (options.hide.workpackage.finished) {
-                if (!node.result.end)
+                if (node.result.end)
+                    return false;
+                else
                     return true;
-            } else {
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         return true;
@@ -208,12 +207,15 @@ class Wbs {
     filterChildren (children, options) {
         let filterd_children = [];
 
-        for (let child of children.list)
+        for (let child of children.list) {
             if (this.isShowNode(child, options)) {
-                filterd_children.push(child);
+                let new_child = Object.assign({}, child);
 
-                child.children = this.filterChildren(child.children, options);
+                filterd_children.push(new_child);
+
+                new_child.children = this.filterChildren(new_child.children, options);
             }
+        }
 
         return this.toPool(filterd_children);
     }
@@ -222,7 +224,7 @@ class Wbs {
 
         filterd_tree.children = this.filterChildren(filterd_tree.children, options);
 
-        return tree;
+        return filterd_tree;
     }
     /* **************************************************************** *
      *  ??? utility? このクラスでは利用していないな。。。。
