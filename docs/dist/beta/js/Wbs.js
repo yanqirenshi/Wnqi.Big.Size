@@ -263,7 +263,7 @@ class Wbs {
         return str.toLowerCase();
     };
     hashWbsPage (code, cls) {
-        return location.hash.split('/')[0] + '/' + cls.toLowerCase() + '/' +code;
+        return location.hash + '/' + cls.toLowerCase() + '/' +code;
     };
     /* **************************************************************** *
      *
