@@ -409,6 +409,39 @@ class Wbs {
         return this.filter(tree, this.initFilterOptions(options));
     }
     /* **************************************************************** *
+     *  ComposeTreeWorkpackage
+     * **************************************************************** */
+    getParent (wp, wbs, edges) {
+        let edge = edges.list.find((d) => {
+            return d.to_id == wp._id && d.to_class == wp._class;
+        });
+
+        return wbs.ht[edge.from_id];
+    }
+    composeTreeReverse (node, wbs, edges) {
+        let parent = this.getParent(node._core, wbs, edges);
+
+        if (!parent)
+            return node;
+
+        let parent_node = this.makeTreeNode(parent);
+
+        parent_node.children.ht[node._id] = node;
+        parent_node.children.list.push(node);
+
+        return this.composeTreeReverse (parent_node, wbs, edges);
+    }
+    composeTreeWorkpackage (wp, wbs, workpackages, edges, options) {
+        // 親を取得する
+        let parent = this.getParent(wp, wbs, edges);
+
+        // 親は通常どおり展開する。
+        let lower = this.composeTree(parent, wbs, workpackages, edges, options);
+
+        // 再上位まで遡る。
+        return this.composeTreeReverse(lower, wbs, edges);
+    }
+    /* **************************************************************** *
      *  ComposeTreeFlat
      * **************************************************************** */
     flatten (tree, level) {
@@ -428,8 +461,15 @@ class Wbs {
 
         return out;
     }
-    composeTreeFlat (project, wbs, workpackages, edges, options) {
-        let tree = this.composeTree(project, wbs, workpackages, edges, options);
+    composeTreeFlat (start_node, wbs, workpackages, edges, options) {
+        if (!start_node)
+            return null;
+
+        let tree = null;
+        if (start_node._class=='WORKPACKAGE')
+            tree = this.composeTreeWorkpackage(start_node, wbs, workpackages, edges, options);
+        else
+            tree = this.composeTree(start_node, wbs, workpackages, edges, options);
 
         return this.flatten([tree], 0);
     }
