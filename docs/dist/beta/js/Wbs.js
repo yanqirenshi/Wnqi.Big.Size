@@ -267,7 +267,7 @@ class Wbs {
     };
     /* **************************************************************** *
      *
-     *  ComposeTree
+     *  ComposeTree WBS
      *
      * **************************************************************** */
     treeNodeLabel (core) {
@@ -335,22 +335,25 @@ class Wbs {
 
         return old_val;
     }
-    setTerms (parent_node, children) {
+    getTerms (children) {
         let schedule = { start: null, end: null };
         let result = { start: null, end: null };
         let result_null_exist = false;
 
         for (let child of children) {
             let child_schedule = child._core.schedule;
-
-            schedule.start = this.mergeSchedule('start', schedule, child_schedule);
-            schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
+            if (child_schedule){
+                schedule.start = this.mergeSchedule('start', schedule, child_schedule);
+                schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
+            }
 
             let child_result = child._core.result;
-            result.start = this.mergeResult('start', result, child_result);
-            result.end   = this.mergeResult('end',   result, child_result);
+            if (child_result) {
+                result.start = this.mergeResult('start', result, child_result);
+                result.end   = this.mergeResult('end',   result, child_result);
+            }
 
-            if (!child_result.end)
+            if (!result.end)
                 result_null_exist = true;
         }
 
@@ -377,7 +380,7 @@ class Wbs {
 
         // term の設定
         if (parent._class!='WORKPACKAGE') {
-            let terms = this.setTerms(parent_node, children.list);
+            let terms = this.getTerms(children.list);
 
             parent.schedule = terms.schedule;
             parent.result   = terms.result;
@@ -391,7 +394,7 @@ class Wbs {
 
         return parent_node;
     }
-    composeTree (project, wbs, workpackages, edges, options) {
+    composeTreeWbs (project, wbs, workpackages, edges, options) {
         let out = [];
         let pool = {
             wbs: wbs,
@@ -409,7 +412,7 @@ class Wbs {
         return this.filter(tree, this.initFilterOptions(options));
     }
     /* **************************************************************** *
-     *  ComposeTreeWorkpackage
+     *  ComposeTree Workpackage
      * **************************************************************** */
     getParent (wp, wbs, edges) {
         let edge = edges.list.find((d) => {
@@ -420,16 +423,18 @@ class Wbs {
     }
     composeTreeReverse (node, wbs, edges) {
         let parent = this.getParent(node._core, wbs, edges);
-
         if (!parent)
             return node;
 
         let parent_node = this.makeTreeNode(parent);
-
         parent_node.children.ht[node._id] = node;
         parent_node.children.list.push(node);
 
-        return this.composeTreeReverse (parent_node, wbs, edges);
+        let terms = this.getTerms(parent_node.children.list);
+        parent_node._core.schedule = terms.schedule;
+        parent_node._core.result   = terms.result;
+
+        return this.composeTreeReverse(parent_node, wbs, edges);
     }
     composeTreeWorkpackage (wp, wbs, workpackages, edges, options) {
         // 親を取得する
@@ -440,6 +445,15 @@ class Wbs {
 
         // 再上位まで遡る。
         return this.composeTreeReverse(lower, wbs, edges);
+    }
+    /* **************************************************************** *
+     *  ComposeTreeFlat
+     * **************************************************************** */
+    composeTree (start_node, wbs, workpackages, edges, options) {
+        if (start_node._class=='WORKPACKAGE')
+            return this.composeTreeWorkpackage(start_node, wbs, workpackages, edges, options);
+        else
+            return this.composeTreeWbs(start_node, wbs, workpackages, edges, options);
     }
     /* **************************************************************** *
      *  ComposeTreeFlat
@@ -465,11 +479,7 @@ class Wbs {
         if (!start_node)
             return null;
 
-        let tree = null;
-        if (start_node._class=='WORKPACKAGE')
-            tree = this.composeTreeWorkpackage(start_node, wbs, workpackages, edges, options);
-        else
-            tree = this.composeTree(start_node, wbs, workpackages, edges, options);
+        let tree = this.composeTree(start_node, wbs, workpackages, edges, options);
 
         return this.flatten([tree], 0);
     }
