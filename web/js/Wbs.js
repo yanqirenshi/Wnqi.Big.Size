@@ -324,14 +324,21 @@ class Wbs {
         let old_val = old_term ? old_term[type] : null;
         let new_val = new_term ? new_term[type] : null;
 
-        if (!old_val) return new_val;
-        if (!new_val) return old_val;
+        if (type=='start') {
+            if (!old_val) return new_val;
+            if (!new_val) return old_val;
 
-        if (type=='start' && new_val.isBefore(old_val))
-            return new_val;
+            if (new_val.isBefore(old_val))
+                return new_val;
+        }
 
-        if (type=='end' && new_val.isAfter(old_val))
-            return new_val;
+        if (type=='end') {
+            if (!old_val) return new_val;
+            if (!new_val) return new_val;
+
+            if (new_val.isAfter(old_val))
+                return new_val;
+        }
 
         return old_val;
     }
@@ -342,16 +349,12 @@ class Wbs {
 
         for (let child of children) {
             let child_schedule = child._core.schedule;
-            if (child_schedule){
-                schedule.start = this.mergeSchedule('start', schedule, child_schedule);
-                schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
-            }
+            schedule.start = this.mergeSchedule('start', schedule, child_schedule);
+            schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
 
             let child_result = child._core.result;
-            if (child_result) {
-                result.start = this.mergeResult('start', result, child_result);
-                result.end   = this.mergeResult('end',   result, child_result);
-            }
+            result.start = this.mergeResult('start', result, child_result);
+            result.end   = this.mergeResult('end',   result, child_result);
 
             if (!result.end)
                 result_null_exist = true;
