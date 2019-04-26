@@ -263,7 +263,15 @@ class Wbs {
         return str.toLowerCase();
     };
     hashWbsPage (code, cls) {
-        return location.hash + '/' + cls.toLowerCase() + '/' +code;
+        let node = '';
+        if (cls=='WBS')
+            node = 'wbs';
+        else if (cls=='WORKPACKAGE')
+            node = 'workpackages';
+        else if (cls=='PROJECT')
+            node = 'projects';
+
+        return location.hash + '/' + node + '/' +code;
     };
     /* **************************************************************** *
      *
