@@ -403,6 +403,19 @@ class Wbs {
             parent_node.result   = parent.result;
         }
 
+        parent_node.children.list = parent_node.children.list.sort((a, b) => {
+            if (!a.schedule.end)
+                return -1;
+
+            if (!b.schedule.end)
+                return 1;
+
+            if (a.schedule.end < b.schedule.end)
+                return -1;
+
+            return 1;
+        });
+
         return parent_node;
     }
     composeTreeWbs (project, wbs, workpackages, edges, options) {
