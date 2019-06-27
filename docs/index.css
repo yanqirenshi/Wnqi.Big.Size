@@ -5,3 +5,7 @@ app .section.inner {
 app .section.inner .title{
     margin-bottom: 11px;
 }
+
+app .contents ol {
+    margin-left: 33px;
+}
