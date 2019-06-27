@@ -1,0 +1,7 @@
+app .section.inner {
+    padding-top: 22px; padding-bottom:0px;
+}
+
+app .section.inner .title{
+    margin-bottom: 11px;
+}

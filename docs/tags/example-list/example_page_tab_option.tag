@@ -3,33 +3,18 @@
     <section class="section">
         <div class="container">
 
-            <div class="contents">
-                <p>
-                    <pre>{x}</pre>
-                </p>
+            <div class="flex-root">
+                <example_page_tab_option-right></example_page_tab_option-right>
+                <example_page_tab_option-left></example_page_tab_option-left>
             </div>
+
         </div>
     </section>
 
-    <script>
-     this.x = [
-         '{',
-         '    hide: {',
-         '        wbs: {',
-         '            finished: false',
-         '        },',
-         '        workpackage: {',
-         '            finished: false',
-         '        }',
-         '    },',
-         '    {',
-         '        term: {',
-         '            start: null,',
-         '            end:   null,',
-         '        },',
-         '    },',
-         '}',
-     ].join('\n');
-    </script>
+    <style>
+     example-list_page_tab_option > .section > .container > .flex-root {
+         display: flex;
+     }
+    </style>
 
 </example-list_page_tab_option>

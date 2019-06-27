@@ -1,5 +1,5 @@
 <models_page_root>
-    <section-header title="Models"></section-header>
+    <section-header title="Usage: Data Model"></section-header>
 
     <div style="margin-top:22px;"></div>
 

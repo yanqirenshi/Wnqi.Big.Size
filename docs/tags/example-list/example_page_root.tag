@@ -1,5 +1,5 @@
 <example-list_page_root>
-    <section-header title="Example"></section-header>
+    <section-header title="Usage: WBS List"></section-header>
 
     <div style="margin-top:22px;"></div>
 

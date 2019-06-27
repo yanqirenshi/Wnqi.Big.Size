@@ -1,5 +1,5 @@
 <example-tree_page_root>
-    <section-header title="Example"></section-header>
+    <section-header title="Usage: WBS Tree"></section-header>
 
     <div style="margin-top:22px;"></div>
 
