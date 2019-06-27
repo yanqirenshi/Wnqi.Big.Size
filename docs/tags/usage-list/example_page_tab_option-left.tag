@@ -10,6 +10,13 @@
     </div>
 
     <div class="indicator">
+        <h1 class="title is-4"><code>term</code></h1>
+
+        <div class="contents">
+        </div>
+    </div>
+
+    <div class="indicator">
         <h1 class="title is-4"><code>columns</code></h1>
 
         <div class="contents">

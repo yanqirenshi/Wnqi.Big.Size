@@ -433,7 +433,10 @@ class Wbs {
         if (!options)
             return tree;
 
-        return this.filter(tree, this.initFilterOptions(options));
+        let lower = this.filter(tree, this.initFilterOptions(options));
+
+        // 再上位まで遡る。
+        return this.composeTreeReverse(lower, wbs, edges);
     }
     /* **************************************************************** *
      *  ComposeTree Workpackage
@@ -568,5 +571,17 @@ class Wbs {
             return this.findStartEndChildren(target);
         else
             return this.findStartEndNode(target);
+    }
+}
+
+
+/**
+ * Wnqi Main Class
+ * @example
+ * let wnqi = new Wnqi();
+ */
+class Wnqi extends Wbs {
+    constructor () {
+        super();
     }
 }

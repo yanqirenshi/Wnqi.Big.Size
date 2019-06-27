@@ -16,6 +16,10 @@
                  finished: false,
              }
          },
+         term: {
+             start: null,
+             end: null,
+         },
          columns: {
              code: {
                  code: "code",

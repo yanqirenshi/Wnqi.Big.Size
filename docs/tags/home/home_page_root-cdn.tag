@@ -39,6 +39,14 @@
                  "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-tree-list.tag",
              ],
          },
+         "0.0.2": {
+             seq: 9,
+             files: [
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/js/Wbs.js",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/tags/wbs-guntt-chart.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/tags/wbs-tree-list.tag",
+             ],
+         },
          "0.0.1": {
              seq: 9,
              files: [
