@@ -412,10 +412,66 @@ riot.tag2('home_page_root-readme-dependencies', '<section class="section"> <div 
      ];
 });
 
-riot.tag2('home_page_root-example-list', '<section class="section"> <div class="container"> <h1 class="title">list</h1> <h2 class="subtitle"></h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('home_page_root-example-list', '<section class="section"> <div class="container"> <div class="contents"> <wbs-tree-list data="{data()}" options="{wbs_list_options}"></wbs-tree-list> </div> </div> </section>', '', '', function(opts) {
+     this.wbs_list_options = {
+         hide: {
+             wbs: {
+                 finished: false
+             },
+             workpackage: {
+                 finished: false
+             }
+         }
+     };
+     this.data = () => {
+         let state = STORE.get('example');
+         let options = this.wbs_list_options;
+
+         if (state.projects.list.length==0)
+             return [];
+
+         let wbs = new Wbs()
+         return wbs.composeTreeFlat(
+             state.projects.list[0],
+             state.wbs,
+             state.workpackages,
+             state.edges,
+             options);
+     };
 });
 
-riot.tag2('home_page_root-example-tree', '<section class="section"> <div class="container"> <h1 class="title">tree</h1> <h2 class="subtitle"></h2> <div class="contents"> </div> </div> </section>', '', '', function(opts) {
+riot.tag2('home_page_root-example-tree', '<section class="section"> <div class="container"> <div class="contents"> <wbs-guntt-chart data="{data()}" start="{start}" end="{end}" options="{options}"></wbs-guntt-chart> </div> </div> </section>', '', '', function(opts) {
+     let now   = moment().millisecond(0).second(0).minute(0).hour(0);
+
+     this.options = {
+         scale: {
+             x: {
+                 cycle: 'days',
+                 tick: 88,
+                 start: moment(now).add(-3, 'd'),
+                 end:   moment(now).add( 3, 'w'),
+             }
+         },
+     };
+
+     this.data = () => {
+         let state = STORE.get('example');
+         let options = {}
+
+         if (state.projects.list.length==0)
+             return [];
+
+         let wbs = new Wbs();
+         let x = state.projects.list.map((project) => {
+             return wbs.composeTree(
+                 project,
+                 state.wbs,
+                 state.workpackages,
+                 state.edges)
+         });
+
+         return x;
+     };
 });
 
 riot.tag2('home_page_root-license', '<section class="section"> <div class="container"> <h1 class="title">License</h1> <div class="contents"> <p>Licensed under the LLGPL License.</p> </div> </div> </section>', '', '', function(opts) {

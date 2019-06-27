@@ -1,4 +1,5 @@
 <example-list_page_tab_list>
+
     <section class="section">
         <div class="container">
             <div class="contents">
@@ -97,4 +98,5 @@
          '};',
      ].join('\n');
     </script>
+
 </example-list_page_tab_list>
