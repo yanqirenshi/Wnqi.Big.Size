@@ -348,6 +348,14 @@ riot.tag2('home_page_root-readme-cdn', '<section class="section"> <div class="co
                  "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-tree-list.tag",
              ],
          },
+         "0.0.2": {
+             seq: 9,
+             files: [
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/js/Wbs.js",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/tags/wbs-guntt-chart.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.2/tags/wbs-tree-list.tag",
+             ],
+         },
          "0.0.1": {
              seq: 9,
              files: [
@@ -717,7 +725,7 @@ riot.tag2('example-list_page_tab_list', '<section class="section"> <div class="c
      ].join('\n');
 });
 
-riot.tag2('example_page_tab_option-left', '<div class="indicator"> <h1 class="title is-4"><code>hide</code></h1> <div class="contents"> <p>データの状態による表示/非表示を管理します。</p> <p>2019-06-27 (Thu) 時点では <code>rows</code> に移行予定です。</p> </div> </div> <div class="indicator"> <h1 class="title is-4"><code>columns</code></h1> <div class="contents"> <p>主に以下の設定を管理します。</p> <ol style="margin-left:33px;"> <li>列の表示/非表示、</li> <li>列のヘッダの表示形式</li> <li>列の値の表示形式</li> </ol> </div> </div> <div class="indicator"> <h1 class="title is-4"><code>rows</code></h1> <div class="contents"> <p>主に以下の設定を管理します。</p> <ol style="margin-left:33px;"> <li>行の表示/非表示、</li> </ol> <p>※ この機能は実装中です。</p> </div> </div>', 'example_page_tab_option-left { flex-grow: 1; margin-left: 22px; display: flex; flex-direction: column; } example_page_tab_option-left > .indicator { margin-bottom: 33px; } example_page_tab_option-left > .indicator > .contents { padding-left: 22px; }', '', function(opts) {
+riot.tag2('example_page_tab_option-left', '<div class="indicator"> <h1 class="title is-4"><code>hide</code></h1> <div class="contents"> <p>データの状態による表示/非表示を管理します。</p> <p>2019-06-27 (Thu) 時点では <code>rows</code> に移行予定です。</p> </div> </div> <div class="indicator"> <h1 class="title is-4"><code>term</code></h1> <div class="contents"> </div> </div> <div class="indicator"> <h1 class="title is-4"><code>columns</code></h1> <div class="contents"> <p>主に以下の設定を管理します。</p> <ol style="margin-left:33px;"> <li>列の表示/非表示、</li> <li>列のヘッダの表示形式</li> <li>列の値の表示形式</li> </ol> </div> </div> <div class="indicator"> <h1 class="title is-4"><code>rows</code></h1> <div class="contents"> <p>主に以下の設定を管理します。</p> <ol style="margin-left:33px;"> <li>行の表示/非表示、</li> </ol> <p>※ この機能は実装中です。</p> </div> </div>', 'example_page_tab_option-left { flex-grow: 1; margin-left: 22px; display: flex; flex-direction: column; } example_page_tab_option-left > .indicator { margin-bottom: 33px; } example_page_tab_option-left > .indicator > .contents { padding-left: 22px; }', '', function(opts) {
 });
 
 riot.tag2('example_page_tab_option-right', '<div> <p> <pre style="width:344px; fonts-size:12px;line-height:14px;">{JSON.stringify(this.options, null, 4)}</pre> </p> </div>', 'example_page_tab_option-right example_page_tab_option-left,[data-is="example_page_tab_option-right"] example_page_tab_option-left{ display: flex; }', '', function(opts) {
@@ -729,6 +737,10 @@ riot.tag2('example_page_tab_option-right', '<div> <p> <pre style="width:344px; f
              workpackage: {
                  finished: false,
              }
+         },
+         term: {
+             start: null,
+             end: null,
          },
          columns: {
              code: {

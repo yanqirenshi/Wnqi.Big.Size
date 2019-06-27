@@ -164,17 +164,14 @@
 
          if (!data)
              return [];
-         dump('1-')
+
          // TODO: 暫定クソコード
          let options = this.opts.options;
-         if (options.rows && options.rows.workpackage) {
-             dump('2-')
-             dump(options.rows.workpackage.hide);
+         if (options.rows && options.rows.workpackage)
              if (options.rows.workpackage.hide)
                  return data.filter((d) => {
                      return d._class != "WORKPACKAGE"
                  });
-         }
 
          return data;
      };
