@@ -7,9 +7,10 @@
 
     <div>
         <classes_page_tab_readme   class="hide"></classes_page_tab_readme>
+        <classes_page_tab_class000 class="hide"></classes_page_tab_class000>
+        <classes_page_tab_class003 class="hide"></classes_page_tab_class003>
         <classes_page_tab_class001 class="hide"></classes_page_tab_class001>
         <classes_page_tab_class002 class="hide"></classes_page_tab_class002>
-        <classes_page_tab_class003 class="hide"></classes_page_tab_class003>
     </div>
 
     <section-footer></section-footer>
@@ -17,9 +18,10 @@
     <script>
      this.page_tabs = new PageTabs([
          {code: 'readme',   label: 'Readme',      tag: 'classes_page_tab_readme' },
+         {code: 'class000', label: 'Wnqi',        tag: 'classes_page_tab_class000' },
+         {code: 'class003', label: 'Wbs',         tag: 'classes_page_tab_class003' },
          {code: 'class001', label: 'WbsNode',     tag: 'classes_page_tab_class001' },
          {code: 'class002', label: 'WbsNodeTerm', tag: 'classes_page_tab_class002' },
-         {code: 'class003', label: 'Wbs',         tag: 'classes_page_tab_class003' },
      ]);
 
      this.on('mount', () => {

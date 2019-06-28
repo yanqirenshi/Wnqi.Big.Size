@@ -1,4 +1,4 @@
-<home_page_root-example-list>
+<examples_page_root-example-list>
 
     <section class="section">
         <div class="container">
@@ -39,4 +39,4 @@
      };
     </script>
 
-</home_page_root-example-list>
+</examples_page_root-example-list>

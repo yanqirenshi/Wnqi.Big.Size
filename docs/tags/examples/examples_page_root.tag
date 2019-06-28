@@ -1,4 +1,4 @@
-<home_page_root>
+<examples_page_root>
     <section-header title="Wnqi Big Size" subtitle="WBS ってデッカイう○ちみたいじゃね。"></section-header>
 
     <div style="margin-top:22px;"></div>
@@ -6,14 +6,14 @@
     <page-tabs core={page_tabs} callback={clickTab}></page-tabs>
 
     <div>
-        <home_page_root-readme    class="hide"></home_page_root-readme>
-        <home_page_root-functions class="hide"></home_page_root-functions>
+        <examples_page_root-example-list class="hide"></examples_page_root-example-list>
+        <examples_page_root-example-tree class="hide"></examples_page_root-example-tree>
     </div>
 
     <script>
      this.page_tabs = new PageTabs([
-         {code: 'readme',       label: 'Readme', tag: 'home_page_root-readme' },
-         {code: 'example-list', label: '機能',   tag: 'home_page_root-functions' },
+         {code: 'example-list', label: 'Example: WBS List', tag: 'examples_page_root-example-list' },
+         {code: 'example-tree', label: 'Example: WBS Tree', tag: 'examples_page_root-example-tree' },
      ]);
 
      this.on('mount', () => {
@@ -26,4 +26,4 @@
              this.update();
      };
     </script>
-</home_page_root>
+</examples_page_root>

@@ -2,7 +2,6 @@
 
     <section class="section">
         <div class="container">
-            <h1 class="title">WbsNodeTerm</h1>
 
             <div class="contents">
             </div>

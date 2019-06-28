@@ -1,4 +1,4 @@
-<home_page_root-example-tree>
+<examples_page_root-example-tree>
 
     <section class="section">
         <div class="container">
@@ -46,4 +46,4 @@
          return x;
      };
     </script>
-</home_page_root-example-tree>
+</examples_page_root-example-tree>
