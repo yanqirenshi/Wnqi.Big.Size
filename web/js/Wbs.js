@@ -1,4 +1,4 @@
-/**
+g/**
  * WBS階層のノードを表現するクラス。
  * @example
  * let x = new  WbsNode(core);
@@ -434,6 +434,9 @@ class Wbs {
             return tree;
 
         let lower = this.filter(tree, this.initFilterOptions(options));
+
+        if (lower._class=="PROJECT")
+            return lower;
 
         // 再上位まで遡る。
         return this.composeTreeReverse(lower, wbs, edges);

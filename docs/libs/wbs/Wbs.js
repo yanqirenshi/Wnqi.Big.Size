@@ -1,4 +1,4 @@
-/**
+g/**
  * WBS階層のノードを表現するクラス。
  * @example
  * let x = new  WbsNode(core);
@@ -166,16 +166,15 @@ class Wbs {
         //      ---------f-------t----------->
         //               |       |
 
-        if (node.schedule.start > options.term.end)
+        if (moment(node.schedule.start).toDate() > moment(options.term.end).toDate())
             return false;
 
-        if (node.schedule.end < options.term.start)
+        if (moment(node.schedule.end).toDate() < moment(options.term.start).toDate())
             return false;
 
         return true;
     }
     isShowNode (node, options) {
-
         if (options.term.start  && options.term.end &&
             node.schedule.start && node.schedule.end)
             if (!this.isInTerm(node, options))
@@ -183,24 +182,24 @@ class Wbs {
 
         if (node._class=="WBS") {
             if (options.hide.wbs.finished) {
-                if (!node.result.end)
+                if (node.result.end)
+                    return false;
+                else
                     return true;
-            } else {
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         if (node._class=="WORKPACKAGE") {
             if (options.hide.workpackage.finished) {
-                if (!node.result.end)
+                if (node.result.end)
+                    return false;
+                else
                     return true;
-            } else {
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         return true;
@@ -208,12 +207,15 @@ class Wbs {
     filterChildren (children, options) {
         let filterd_children = [];
 
-        for (let child of children.list)
+        for (let child of children.list) {
             if (this.isShowNode(child, options)) {
-                filterd_children.push(child);
+                let new_child = Object.assign({}, child);
 
-                child.children = this.filterChildren(child.children, options);
+                filterd_children.push(new_child);
+
+                new_child.children = this.filterChildren(new_child.children, options);
             }
+        }
 
         return this.toPool(filterd_children);
     }
@@ -222,7 +224,7 @@ class Wbs {
 
         filterd_tree.children = this.filterChildren(filterd_tree.children, options);
 
-        return tree;
+        return filterd_tree;
     }
     /* **************************************************************** *
      *  ??? utility? このクラスでは利用していないな。。。。
@@ -261,11 +263,19 @@ class Wbs {
         return str.toLowerCase();
     };
     hashWbsPage (code, cls) {
-        return location.hash.split('/')[0] + '/' + cls.toLowerCase() + '/' +code;
+        let node = '';
+        if (cls=='WBS')
+            node = 'wbs';
+        else if (cls=='WORKPACKAGE')
+            node = 'workpackages';
+        else if (cls=='PROJECT')
+            node = 'projects';
+
+        return location.hash + '/' + node + '/' +code;
     };
     /* **************************************************************** *
      *
-     *  ComposeTree
+     *  ComposeTree WBS
      *
      * **************************************************************** */
     treeNodeLabel (core) {
@@ -322,25 +332,31 @@ class Wbs {
         let old_val = old_term ? old_term[type] : null;
         let new_val = new_term ? new_term[type] : null;
 
-        if (!old_val) return new_val;
-        if (!new_val) return old_val;
+        if (type=='start') {
+            if (!old_val) return new_val;
+            if (!new_val) return old_val;
 
-        if (type=='start' && new_val.isBefore(old_val))
-            return new_val;
+            if (new_val.isBefore(old_val))
+                return new_val;
+        }
 
-        if (type=='end' && new_val.isAfter(old_val))
-            return new_val;
+        if (type=='end') {
+            if (!old_val) return new_val;
+            if (!new_val) return new_val;
+
+            if (new_val.isAfter(old_val))
+                return new_val;
+        }
 
         return old_val;
     }
-    setTerms (parent_node, children) {
+    getTerms (children) {
         let schedule = { start: null, end: null };
         let result = { start: null, end: null };
         let result_null_exist = false;
 
         for (let child of children) {
             let child_schedule = child._core.schedule;
-
             schedule.start = this.mergeSchedule('start', schedule, child_schedule);
             schedule.end   = this.mergeSchedule('end',   schedule, child_schedule);
 
@@ -348,7 +364,7 @@ class Wbs {
             result.start = this.mergeResult('start', result, child_result);
             result.end   = this.mergeResult('end',   result, child_result);
 
-            if (!child_result.end)
+            if (!result.end)
                 result_null_exist = true;
         }
 
@@ -375,7 +391,7 @@ class Wbs {
 
         // term の設定
         if (parent._class!='WORKPACKAGE') {
-            let terms = this.setTerms(parent_node, children.list);
+            let terms = this.getTerms(children.list);
 
             parent.schedule = terms.schedule;
             parent.result   = terms.result;
@@ -387,9 +403,22 @@ class Wbs {
             parent_node.result   = parent.result;
         }
 
+        parent_node.children.list = parent_node.children.list.sort((a, b) => {
+            if (!a.schedule.end)
+                return -1;
+
+            if (!b.schedule.end)
+                return 1;
+
+            if (a.schedule.end < b.schedule.end)
+                return -1;
+
+            return 1;
+        });
+
         return parent_node;
     }
-    composeTree (project, wbs, workpackages, edges, options) {
+    composeTreeWbs (project, wbs, workpackages, edges, options) {
         let out = [];
         let pool = {
             wbs: wbs,
@@ -404,7 +433,57 @@ class Wbs {
         if (!options)
             return tree;
 
-        return this.filter(tree, this.initFilterOptions(options));
+        let lower = this.filter(tree, this.initFilterOptions(options));
+
+        if (lower._class=="PROJECT")
+            return lower;
+
+        // 再上位まで遡る。
+        return this.composeTreeReverse(lower, wbs, edges);
+    }
+    /* **************************************************************** *
+     *  ComposeTree Workpackage
+     * **************************************************************** */
+    getParent (wp, wbs, edges) {
+        let edge = edges.list.find((d) => {
+            return d.to_id == wp._id && d.to_class == wp._class;
+        });
+
+        return wbs.ht[edge.from_id];
+    }
+    composeTreeReverse (node, wbs, edges) {
+        let parent = this.getParent(node._core, wbs, edges);
+        if (!parent)
+            return node;
+
+        let parent_node = this.makeTreeNode(parent);
+        parent_node.children.ht[node._id] = node;
+        parent_node.children.list.push(node);
+
+        let terms = this.getTerms(parent_node.children.list);
+        parent_node._core.schedule = terms.schedule;
+        parent_node._core.result   = terms.result;
+
+        return this.composeTreeReverse(parent_node, wbs, edges);
+    }
+    composeTreeWorkpackage (wp, wbs, workpackages, edges, options) {
+        // 親を取得する
+        let parent = this.getParent(wp, wbs, edges);
+
+        // 親は通常どおり展開する。
+        let lower = this.composeTree(parent, wbs, workpackages, edges, options);
+
+        // 再上位まで遡る。
+        return this.composeTreeReverse(lower, wbs, edges);
+    }
+    /* **************************************************************** *
+     *  ComposeTreeFlat
+     * **************************************************************** */
+    composeTree (start_node, wbs, workpackages, edges, options) {
+        if (start_node._class=='WORKPACKAGE')
+            return this.composeTreeWorkpackage(start_node, wbs, workpackages, edges, options);
+        else
+            return this.composeTreeWbs(start_node, wbs, workpackages, edges, options);
     }
     /* **************************************************************** *
      *  ComposeTreeFlat
@@ -426,8 +505,11 @@ class Wbs {
 
         return out;
     }
-    composeTreeFlat (project, wbs, workpackages, edges, options) {
-        let tree = this.composeTree(project, wbs, workpackages, edges, options);
+    composeTreeFlat (start_node, wbs, workpackages, edges, options) {
+        if (!start_node)
+            return null;
+
+        let tree = this.composeTree(start_node, wbs, workpackages, edges, options);
 
         return this.flatten([tree], 0);
     }
@@ -492,5 +574,17 @@ class Wbs {
             return this.findStartEndChildren(target);
         else
             return this.findStartEndNode(target);
+    }
+}
+
+
+/**
+ * Wnqi Main Class
+ * @example
+ * let wnqi = new Wnqi();
+ */
+class Wnqi extends Wbs {
+    constructor () {
+        super();
     }
 }

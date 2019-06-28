@@ -30,6 +30,7 @@
              return [];
 
          let wbs = new Wbs()
+
          return wbs.composeTreeFlat(
              state.projects.list[0],
              state.wbs,

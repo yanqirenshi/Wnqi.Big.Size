@@ -343,6 +343,7 @@ riot.tag2('examples_page_root-example-list', '<section class="section"> <div cla
              return [];
 
          let wbs = new Wbs()
+
          return wbs.composeTreeFlat(
              state.projects.list[0],
              state.wbs,
