@@ -22,7 +22,7 @@
         <tbody>
             <tr each={tableData()} class={tool.projectClass(_core._class)}>
                 <td nowrap class="{isHideCol('code')}">
-                    <a href="{tool.hashWbsPage(_core._id, _core._class)}">{_core._id}</a>
+                    <a href="{pageLinkUrl(_core)}">{_core._id}</a>
                 </td>
 
                 <td nowrap class="{isHideCol('name')}">
@@ -88,9 +88,29 @@
     </script>
 
     <!-- ---------- -->
-    <!--   Events   -->
+    <!--   added    -->
     <!-- ---------- -->
     <script>
+     this.pageLinkUrl = (record) => {
+         let keys = "options.rows.operators.pageLink"
+         let func = keys.split('.').reduce((a, b) => {
+             if (!a || !a[b])
+                 return null;
+
+             return a[b];
+         }, this.opts);
+
+         if (func)
+             return func(record);
+
+         return this.tool.hashWbsPage(record._id, record._class);
+     };
+    </script>
+
+     <!-- ---------- -->
+     <!--   Events   -->
+     <!-- ---------- -->
+     <script>
      this.clickAddChild = (e) => {
          this.opts.callback('open-add-child', {
              _id: e.target.getAttribute('node_id')
@@ -164,17 +184,14 @@
 
          if (!data)
              return [];
-         dump('1-')
+
          // TODO: 暫定クソコード
          let options = this.opts.options;
-         if (options.rows && options.rows.workpackage) {
-             dump('2-')
-             dump(options.rows.workpackage.hide);
+         if (options.rows && options.rows.workpackage)
              if (options.rows.workpackage.hide)
                  return data.filter((d) => {
                      return d._class != "WORKPACKAGE"
                  });
-         }
 
          return data;
      };

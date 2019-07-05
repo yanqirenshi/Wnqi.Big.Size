@@ -31,12 +31,12 @@
 
     <script>
      this.versions = {
-         "beta": {
+         "0.0.3 (edge)": {
              seq: 0,
              files: [
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/js/Wbs.js",
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-guntt-chart.tag",
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-tree-list.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/js/Wbs.js",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/tags/wbs-guntt-chart.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/tags/wbs-tree-list.tag",
              ],
          },
          "0.0.2": {

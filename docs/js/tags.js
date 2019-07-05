@@ -431,12 +431,12 @@ riot.tag2('home_page_root-author', '<section class="section"> <div class="contai
 
 riot.tag2('home_page_root-readme-cdn', '<section class="section"> <div class="container"> <h1 class="title">CDN</h1> <div class="contents"> <table class="table is-bordered is-striped is-narrow is-hoverable"> <thead> <tr> <th>Version</th> <th>File</th> </tr> </thead> <tbody> <tr each="{rec in versiontsBody()}"> <td each="{cell in rec}" colspan="{cell.span.col}" rowspan="{cell.span.row}"> <span if="{!cell.link}">{cell.value}</span> <a-target-blank if="{cell.link}" label="{cell.value}" href="{cell.value}"></a-target-blank> </td> </tr> </tbody> </table> </div> </div> </section>', '', '', function(opts) {
      this.versions = {
-         "beta": {
+         "0.0.3 (edge)": {
              seq: 0,
              files: [
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/js/Wbs.js",
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-guntt-chart.tag",
-                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/beta/tags/wbs-tree-list.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/js/Wbs.js",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/tags/wbs-guntt-chart.tag",
+                 "https://yanqirenshi.github.io/Wnqi-Big-Size/dist/0.0.3/tags/wbs-tree-list.tag",
              ],
          },
          "0.0.2": {

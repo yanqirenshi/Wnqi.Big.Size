@@ -1,4 +1,4 @@
-g/**
+/**
  * WBS階層のノードを表現するクラス。
  * @example
  * let x = new  WbsNode(core);
