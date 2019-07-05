@@ -2,7 +2,7 @@
 
     <div>
         <p>
-            <pre style="width:344px; fonts-size:12px;line-height:14px;">{JSON.stringify(this.options, null, 4)}</pre>
+            <pre style="width:344px; fonts-size:12px;line-height:14px;">{JSON.stringify(this.options, null, 5)}</pre>
         </p>
     </div>
 
@@ -63,6 +63,9 @@
              },
          },
          rows: {
+             operators: {
+                 pageLink: null,
+             },
              workpackage: {
                  hide: false,
              }
