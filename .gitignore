@@ -6,3 +6,9 @@
 *.x86f
 *~
 .#*
+
+
+#####
+##### React
+#####
+react/node_modules
