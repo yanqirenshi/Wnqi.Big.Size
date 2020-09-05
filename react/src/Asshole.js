@@ -295,7 +295,32 @@ export default class Asshole {
 
         return { schedule: schedule, result: result };
     }
-    addChildren(parent_node, pool) {
+    sortChildren (parent_node) {
+        return parent_node.children.list.sort((a, b) => {
+            if (a.order && b.order)
+                return (a.order < b.order) ? -1 : 1;
+
+            if (a.schedule || b.schedule) {
+                if (a.schedule && !b.schedule)
+                    return 1;
+
+                if (!a.schedule && b.schedule)
+                    return -1;
+
+                if (!a.schedule.end)
+                    return -1;
+
+                if (!b.schedule.end)
+                    return 1;
+
+                if (a.schedule.end < b.schedule.end)
+                    return -1;
+            }
+
+            return (a._id < b._id) ? -1 : 1;
+        });
+    }
+    addChildren (parent_node, pool) {
         let parent = parent_node._core;
         let children = parent_node.children;
 
@@ -330,27 +355,7 @@ export default class Asshole {
             parent_node.result   = parent.result;
         }
 
-        parent_node.children.list = parent_node.children.list.sort((a, b) => {
-            if (!a.schedule && !a.schedule)
-                return -1;
-
-            if (a.schedule && !a.schedule)
-                return 1;
-
-            if (!a.schedule && a.schedule)
-                return -1;
-
-            if (!a.schedule.end)
-                return -1;
-
-            if (!b.schedule.end)
-                return 1;
-
-            if (a.schedule.end < b.schedule.end)
-                return -1;
-
-            return 1;
-        });
+        parent_node.children.list = this.sortChildren (parent_node);;
 
         return parent_node;
     }
@@ -432,11 +437,7 @@ export default class Asshole {
     flatten (tree, level) {
         let out = [];
 
-        let tree_sorted = tree.sort((a,b) => {
-            return a._id < b._id ? -1 : 1;
-        });
-
-        for (let node of tree_sorted) {
+        for (let node of tree) {
             node._level = level;
 
             out.push(node);

@@ -3,12 +3,13 @@ import merge from 'deepmerge';
 export default class Wnqi {
     template () {
         return {
-            label: '',
+            label:    '',
             children: { ht:{}, list: [] },
             schedule: null,
             result:   null,
-            _id: null,
-            _class: null,
+            order:    null,
+            _id:      null,
+            _class:   null,
         };
     }
     label (core) {
