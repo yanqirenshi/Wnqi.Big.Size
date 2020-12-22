@@ -1,0 +1,33 @@
+{
+    "name": "@yanqirenshi/wnqi.big.size",
+    "version": "0.0.2",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "test:w": "jest --watch",
+        "test:coverage": "jest --coverage"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yanqirenshi/Wnqi.Big.Size.git"
+    },
+    "author": "yanqirenshi <yanqirenshi@gmail.com> (https://github.com/yanqirenshi)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/yanqirenshi/Wnqi.Big.Size/issues"
+    },
+    "homepage": "https://yanqirenshi.github.io/Wnqi.Big.Size",
+    "dependencies": {
+        "deepmerge": "^4.2.2",
+        "moment": "^2.27.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
+        "babel-jest": "^25.2.4",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+        "jest": "^25.2.4"
+    }
+}
